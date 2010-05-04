@@ -62,8 +62,6 @@ module Beanstalk
           :dir => directory, :nolock => @options['cloche_nolock'])
       end
 
-      @client_id = @cloche ? nil : "BsStorage-#{Thread.current.object_id}-#{$$}"
-
       put_configuration
 
       serve if @cloche
@@ -99,7 +97,7 @@ module Beanstalk
 
       msg = Rufus::Json.decode(job.body)
 
-      return [] if msg == nil
+      #return [] if msg == nil
 
       #if msg = msg['msg']
       #  msg = msg
@@ -253,32 +251,30 @@ module Beanstalk
       #p [ Thread.current.object_id, :operate, command, params ]
       #p [ Thread.current.object_id, :operate, connection('commands') ]
 
-      timestamp = "ts_#{Time.now.to_f}"
+      client_id = "BsStorage-#{Thread.current.object_id}-#{$$}"
 
       con = connection('commands')
 
-      con.put(Rufus::Json.encode([ command, params, @client_id, timestamp ]))
+      con.put(Rufus::Json.encode([ command, params, client_id ]))
 
-      con.watch(@client_id)
+      con.watch(client_id)
       con.ignore('commands')
 
       result = nil
 
       # NOTE : what about a timeout ?
 
-      loop do
-        job = con.reserve
-        job.delete
-        ts, result = Rufus::Json.decode(job.body)
-        break if ts == timestamp
-      end
+      #p [ Thread.current.object_id, :operate, command, :reserve ]
+      job = con.reserve
+      job.delete
+      result = Rufus::Json.decode(job.body)
 
       if result.is_a?(Array) && result.first == 'error'
         raise ArgumentError.new(result.last) if result[1] == 'ArgumentError'
         raise BsStorageError.new(result.last)
       end
 
-      #p [ Thread.current.object_id, :operate, :over ]
+      #p [ Thread.current.object_id, :operate, command, :over ]
 
       result
     end
@@ -293,7 +289,7 @@ module Beanstalk
         job = con.reserve
         job.delete
 
-        command, params, client_id, timestamp = Rufus::Json.decode(job.body)
+        command, params, client_id = Rufus::Json.decode(job.body)
 
         #puts '=' * 80
         #p [ command, params, client_id, timestamp ]
@@ -310,7 +306,7 @@ module Beanstalk
         end
 
         con.use(client_id)
-        con.put(Rufus::Json.encode([ timestamp, result ]))
+        con.put(Rufus::Json.encode(result))
       end
     end
   end

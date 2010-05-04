@@ -13,4 +13,7 @@
 
 [ ] drop the msgs idiosyncrasies ?
     at first try to go all the way with msgs vs commands
+    |
+    one of the disadvantages of msgs + commands is that
+    schedules are not stored at the same place as the exps/workitems/...
 
