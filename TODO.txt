@@ -2,5 +2,6 @@
 [o] operate : sign messages
 
 [ ] operate : better name ?
+[ ] 'commands' channel : better name ?
 [ ] fork beanstalk S(d, 'iface:port', :fork => true)
 

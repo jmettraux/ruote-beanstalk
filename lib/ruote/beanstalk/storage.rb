@@ -42,8 +42,7 @@ module Beanstalk
 
     def initialize (uri, directory=nil, options=nil)
 
-      @connection = ::Beanstalk::Connection.new(uri)
-      #@connection.ignore('default')
+      @uri = uri
 
       directory, @options = if directory.nil?
         [ nil, {} ]
@@ -72,26 +71,47 @@ module Beanstalk
 
     def reserve (doc)
       # no need for a reserve implementation
+      # always say : true
+      true
     end
 
     def put_msg (action, options)
 
-      @connection.use('msgs')
-      @connection.put(to_json(doc))
+      #p [ Thread.current.object_id, :put_msg, action ]
+      #p [ Thread.current.object_id, :put_msg, connection('msgs') ]
+
+      doc = prepare_msg_doc(action, options)
+
+      connection('msgs').put(Rufus::Json.encode(doc))
+
+      #p [ Thread.current.object_id, :put_msg, action, :done ]
 
       nil
     end
 
     def get_msgs
 
-      @connection.use('msgs')
-      job = @connection.reserve
+      #p [ Thread.current.object_id, :get_msgs, connection('msgs') ]
+      job = connection('msgs').reserve
+      job.delete
 
-      if msg = job['msg']
-        job = msg
-      end
+      msg = Rufus::Json.decode(job.body)
 
-      job
+      return [] if msg == nil
+
+      #if msg = msg['msg']
+      #  msg = msg
+      #end
+
+      #p [ Thread.current.object_id, :get_msgs, [ msg ] ]
+
+      [ msg ]
+
+    rescue Exception => e
+      puts "*" * 80
+      p e
+      puts e.backtrace.first
+      raise e
     end
 
     def put_schedule (flavour, owner_fei, s, msg)
@@ -102,8 +122,7 @@ module Beanstalk
 
       delay = (Time.parse(doc['at']) - Time.now).to_i
 
-      @connection.use('msgs')
-      @connection.put(Rufus::Json.encode(doc), 65536, delay)
+      connection('msgs').put(Rufus::Json.encode(doc), 65536, delay)
         # returns the delayed job_id
     end
 
@@ -114,8 +133,7 @@ module Beanstalk
 
     def delete_schedule (schedule_id)
 
-      @connection.use('msgs')
-      @connection.delete(schedule_id)
+      connection('msgs').delete(schedule_id)
     end
 
     def put (doc, opts={})
@@ -193,6 +211,19 @@ module Beanstalk
 
     protected
 
+    def connection (tubename)
+
+      key = "BeanstalkConnection_#{tubename}"
+
+      c = Thread.current[key]
+      return c if c
+
+      c = ::Beanstalk::Connection.new(@uri, tubename)
+      c.ignore('default')
+
+      Thread.current[key] = c
+    end
+
     # Don't put configuration if it's already in
     #
     # (avoid storages from trashing configuration...)
@@ -206,16 +237,23 @@ module Beanstalk
 
     def operate (command, params)
 
+      p [ Thread.current.object_id, :operate, command, params ]
+      #p [ Thread.current.object_id, :operate, connection('commands') ]
+
       timestamp = "ts_#{Time.now.to_f}"
 
-      @connection.use('commands')
-      @connection.put(
-        Rufus::Json.encode([ command, params, @client_id, timestamp ]))
+      con = connection('commands')
 
-      @connection.watch(@client_id)
+      con.put(Rufus::Json.encode([ command, params, @client_id, timestamp ]))
+
+      con.watch(@client_id)
+      con.ignore('commands')
+
       result = nil
+
       loop do
-        job = @connection.reserve
+        p [ Thread.current.object_id, :operate ]
+        job = con.reserve
         job.delete
         ts, result = Rufus::Json.decode(job.body)
         break if ts == timestamp
@@ -226,23 +264,25 @@ module Beanstalk
         raise BsStorageError.new(result.last)
       end
 
+      p [ Thread.current.object_id, :operate, :over ]
+
       result
     end
 
     def serve
 
-      # TODO : exit command ?
+      con = connection('commands')
 
       loop do
 
-        @connection.watch('commands')
-        job = @connection.reserve
+        p [ Thread.current.object_id, :serve ]
+        job = con.reserve
         job.delete
 
         command, params, client_id, timestamp = Rufus::Json.decode(job.body)
 
-        #puts '=' * 80
-        #p [ command, params, client_id ]
+        puts '=' * 80
+        p [ command, params, client_id, timestamp ]
 
         result = begin
           send(command, *params)
@@ -252,8 +292,8 @@ module Beanstalk
           [ 'error', e.class.to_s, e.to_s ]
         end
 
-        @connection.use(client_id)
-        @connection.put(Rufus::Json.encode([ timestamp, result ]))
+        con.use(client_id)
+        con.put(Rufus::Json.encode([ timestamp, result ]))
       end
     end
   end
