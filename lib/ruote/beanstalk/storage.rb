@@ -206,7 +206,7 @@ module Beanstalk
 
     def operate (command, params)
 
-      timestamp = "ts_#{Time.now.to_f.to_s}"
+      timestamp = "ts_#{Time.now.to_f}"
 
       @connection.use('commands')
       @connection.put(
