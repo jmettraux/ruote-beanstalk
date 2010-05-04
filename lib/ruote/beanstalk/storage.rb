@@ -92,16 +92,15 @@ module Beanstalk
       # NOTE : what about a timeout ?
 
       #p [ Thread.current.object_id, :get_msgs, connection('msgs') ]
+
       job = connection('msgs').reserve
       job.delete
 
       msg = Rufus::Json.decode(job.body)
 
-      #return [] if msg == nil
-
-      #if msg = msg['msg']
-      #  msg = msg
-      #end
+      if m = msg['msg']
+        msg = m
+      end
 
       #p [ Thread.current.object_id, :get_msgs, [ msg ] ]
 
@@ -116,11 +115,13 @@ module Beanstalk
 
     def put_schedule (flavour, owner_fei, s, msg)
 
+      now = Time.now
+
       doc = prepare_schedule_doc(flavour, owner_fei, s, msg)
 
       return nil unless doc
 
-      delay = (Time.parse(doc['at']) - Time.now).to_i
+      delay = (Time.parse(doc['at']) - now).to_i
 
       connection('msgs').put(Rufus::Json.encode(doc), 65536, delay)
         # returns the delayed job_id
