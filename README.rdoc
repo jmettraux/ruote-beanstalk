@@ -1,0 +1,60 @@
+
+= ruote-beanstalk
+
+Beanstalk extensions for ruote 2.1 (a ruby workflow engine)
+
+
+== usage
+
+TODO
+
+
+== running tests
+
+=== Ruote::Beanstalk::BsParticipant and BsReceiver
+
+TODO
+
+=== Ruote::Beanstalk::BsStorage
+
+assuming you have
+
+  ruote/
+  ruote-redis/
+
+* unit tests :
+
+get into ruote/ and do
+
+  ruby test/unit/storage.rb --beanstalk
+
+* functional tests :
+
+get into ruote/ and do
+
+  ruby test/functional/test.rb --beanstalk
+
+
+== license
+
+MIT
+
+
+== links
+
+* http://kr.github.com/beanstalkd/
+
+* http://ruote.rubyforge.org/
+* http://github.com/jmettraux/ruote-beanstalk
+
+
+== feedback
+
+mailing list : http://groups.google.com/group/openwferu-users
+irc : irc.freenode.net #ruote
+
+
+== many thanks to
+
+- the beanstalk authors
+

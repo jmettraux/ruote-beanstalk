@@ -1,0 +1,8 @@
+
+= ruote-beanstalk - CHANGELOG.txt
+
+
+== ruote-beanstalk 2.1.10    not yet released
+
+- initial release
+

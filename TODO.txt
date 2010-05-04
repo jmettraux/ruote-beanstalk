@@ -1,0 +1,5 @@
+
+[ ] operate : sign messages
+[ ] operate : better name ?
+[ ] fork beanstalk S(d, 'iface:port', :fork => true)
+
