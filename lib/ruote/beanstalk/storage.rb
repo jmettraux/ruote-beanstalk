@@ -206,13 +206,20 @@ module Beanstalk
 
     def operate (command, params)
 
+      timestamp = "ts_#{Time.now.to_f.to_s}"
+
       @connection.use('commands')
-      @connection.put(Rufus::Json.encode([ command, params, @client_id ]))
+      @connection.put(
+        Rufus::Json.encode([ command, params, @client_id, timestamp ]))
 
       @connection.watch(@client_id)
-      job = @connection.reserve
-      job.delete
-      result = Rufus::Json.decode(job.body)
+      result = nil
+      loop do
+        job = @connection.reserve
+        job.delete
+        ts, result = Rufus::Json.decode(job.body)
+        break if ts == timestamp
+      end
 
       if result.is_a?(Array) && result.first == 'error'
         raise ArgumentError.new(result.last) if result[1] == 'ArgumentError'
@@ -232,7 +239,7 @@ module Beanstalk
         job = @connection.reserve
         job.delete
 
-        command, params, client_id = Rufus::Json.decode(job.body)
+        command, params, client_id, timestamp = Rufus::Json.decode(job.body)
 
         #puts '=' * 80
         #p [ command, params, client_id ]
@@ -246,7 +253,7 @@ module Beanstalk
         end
 
         @connection.use(client_id)
-        @connection.put(Rufus::Json.encode(result))
+        @connection.put(Rufus::Json.encode([ timestamp, result ]))
       end
     end
   end
