@@ -91,6 +91,8 @@ module Beanstalk
 
     def get_msgs
 
+      # NOTE : what about a timeout ?
+
       #p [ Thread.current.object_id, :get_msgs, connection('msgs') ]
       job = connection('msgs').reserve
       job.delete
@@ -107,11 +109,11 @@ module Beanstalk
 
       [ msg ]
 
-    rescue Exception => e
-      puts "*" * 80
-      p e
-      puts e.backtrace.first
-      raise e
+    #rescue Exception => e
+    #  puts "*" * 80
+    #  p e
+    #  puts e.backtrace.first
+    #  raise e
     end
 
     def put_schedule (flavour, owner_fei, s, msg)
@@ -194,6 +196,14 @@ module Beanstalk
     end
 
     def shutdown
+
+      Thread.list.each do |t|
+        t.keys.each do |k|
+          next unless k.match(/^BeanstalkConnection\_/)
+          t[k].close
+          t[k] = nil
+        end
+      end
     end
 
     # Mainly used by ruote's test/unit/ut_17_storage.rb
@@ -253,6 +263,8 @@ module Beanstalk
       con.ignore('commands')
 
       result = nil
+
+      # NOTE : what about a timeout ?
 
       loop do
         job = con.reserve

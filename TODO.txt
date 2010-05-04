@@ -4,4 +4,13 @@
 [ ] operate : better name ?
 [ ] 'commands' channel : better name ?
 [ ] fork beanstalk S(d, 'iface:port', :fork => true)
+    :beanstalkd => true is probably better
+
+[ ] security issue in #serve (send)
+[ ] put_back in the operate loop ?
+
+[ ] test with beanstalk -b ruote_work/beanstalk/ or something
+
+[ ] drop the msgs idiosyncrasies ?
+    at first try to go all the way with msgs vs commands
 
