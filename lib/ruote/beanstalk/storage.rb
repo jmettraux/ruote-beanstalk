@@ -144,9 +144,11 @@ module Beanstalk
 
       r = operate('put', [ doc ])
 
-      doc['_rev'] = (doc['_rev'] || 0) + 1 if opts[:update_rev]
+      return r unless r.nil?
 
-      r
+      doc['_rev'] = (doc['_rev'] || -1) + 1 if opts[:update_rev]
+
+      nil
     end
 
     def get (type, key)
@@ -186,9 +188,10 @@ module Beanstalk
       end
     end
 
-    #def dump (type)
-    #  @dbs[type].dump
-    #end
+    def dump (type)
+
+      get_many(type)
+    end
 
     def shutdown
     end
@@ -237,7 +240,7 @@ module Beanstalk
 
     def operate (command, params)
 
-      p [ Thread.current.object_id, :operate, command, params ]
+      #p [ Thread.current.object_id, :operate, command, params ]
       #p [ Thread.current.object_id, :operate, connection('commands') ]
 
       timestamp = "ts_#{Time.now.to_f}"
@@ -252,7 +255,6 @@ module Beanstalk
       result = nil
 
       loop do
-        p [ Thread.current.object_id, :operate ]
         job = con.reserve
         job.delete
         ts, result = Rufus::Json.decode(job.body)
@@ -264,7 +266,7 @@ module Beanstalk
         raise BsStorageError.new(result.last)
       end
 
-      p [ Thread.current.object_id, :operate, :over ]
+      #p [ Thread.current.object_id, :operate, :over ]
 
       result
     end
@@ -275,14 +277,17 @@ module Beanstalk
 
       loop do
 
-        p [ Thread.current.object_id, :serve ]
+        #p [ Thread.current.object_id, :serve ]
         job = con.reserve
         job.delete
 
         command, params, client_id, timestamp = Rufus::Json.decode(job.body)
 
-        puts '=' * 80
-        p [ command, params, client_id, timestamp ]
+        #puts '=' * 80
+        #p [ command, params, client_id, timestamp ]
+
+        # NOTE : security risk
+        #        have to check if command is authorized !
 
         result = begin
           send(command, *params)
