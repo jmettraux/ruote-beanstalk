@@ -31,9 +31,6 @@ require 'ruote'
 module Ruote
 module Beanstalk
 
-  class BsRemoteError < RuntimeError
-  end
-
   class BsReceiver < Ruote::Receiver
 
     def initialize (cwes, beanstalk, tube, options={})
@@ -63,7 +60,7 @@ module Beanstalk
 
       case type
         when 'workitem' then reply(workitem)
-        when 'error' then raise(BsRemoteError.new(data.inspect))
+        when 'error' then raise_error(data)
         #else simply drop
       end
     end
