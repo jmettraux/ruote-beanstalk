@@ -67,94 +67,6 @@ module Beanstalk
       serve if @cloche
     end
 
-    def reserve (doc)
-      # no need for a reserve implementation
-      # always say : true
-      true
-    end
-
-    def put_msg (action, options)
-
-      #p [ Thread.current.object_id, :put_msg, action ]
-      #p [ Thread.current.object_id, :put_msg, connection('msgs') ]
-
-      doc = prepare_msg_doc(action, options)
-
-      connection('msgs').put(Rufus::Json.encode(doc))
-
-      #p [ Thread.current.object_id, :put_msg, action, :done ]
-
-      nil
-    end
-
-    def get_msgs
-
-      # NOTE : what about a timeout ?
-
-      #p [ Thread.current.object_id, :get_msgs, connection('msgs') ]
-
-      job = connection('msgs').reserve
-      job.delete
-
-      msg = Rufus::Json.decode(job.body)
-
-      if m = msg['msg']
-        msg = m
-      end
-
-      #p [ Thread.current.object_id, :get_msgs, [ msg ] ]
-
-      [ msg ]
-
-    #rescue Exception => e
-    #  puts "*" * 80
-    #  p e
-    #  puts e.backtrace.first
-    #  raise e
-    end
-
-    def put_schedule (flavour, owner_fei, s, msg)
-
-      now = Time.now
-
-      doc = prepare_schedule_doc(flavour, owner_fei, s, msg)
-
-      return nil unless doc
-
-      delay = (Time.parse(doc['at']) - now).to_i
-
-      connection('msgs').put(Rufus::Json.encode(doc), 65536, delay)
-        # returns the delayed job_id
-    end
-
-    def get_schedules (delta, now)
-
-      []
-    end
-
-    def delete_schedule (schedule_id)
-
-      #begin
-      #job = connection('msgs').peek_job(schedule_id)
-      #p [ 0, job ]
-      #if job
-      #  job.reserve
-      #  job.delete
-      #end
-      #job = connection('msgs').peek_job(schedule_id)
-      #p [ 1, job ]
-      #rescue Exception => e
-      #p e
-      #puts e.backtrace.join("\n")
-      #end
-
-      # NOTE
-      #
-      # As of beanstalkd 1.4[.4] it's not possible to delete a delayed job
-      # So let's just ignore that for now and hope there isn't too much
-      # process instance rewriting going on...
-    end
-
     def put (doc, opts={})
 
       doc.merge!('put_at' => Ruote.now_to_utc_s)
@@ -241,17 +153,18 @@ module Beanstalk
 
     protected
 
-    def connection (tubename)
+    CONN_KEY = '__ruote_beanstalk_connection'
+    TUBE_NAME = 'ruote-storage-commands'
 
-      key = "BeanstalkConnection_#{tubename}"
+    def connection
 
-      c = Thread.current[key]
+      c = Thread.current[CONN_KEY]
       return c if c
 
-      c = ::Beanstalk::Connection.new(@uri, tubename)
+      c = ::Beanstalk::Connection.new(@uri, TUBE_NAME)
       c.ignore('default')
 
-      Thread.current[key] = c
+      Thread.current[CONN_KEY] = c
     end
 
     # Don't put configuration if it's already in
@@ -268,16 +181,15 @@ module Beanstalk
     def operate (command, params)
 
       #p [ Thread.current.object_id, :operate, command, params ]
-      #p [ Thread.current.object_id, :operate, connection('commands') ]
 
       client_id = "BsStorage-#{Thread.current.object_id}-#{$$}"
 
-      con = connection('commands')
+      con = connection
 
       con.put(Rufus::Json.encode([ command, params, client_id ]))
 
       con.watch(client_id)
-      con.ignore('commands')
+      con.ignore(TUBE_NAME)
 
       result = nil
 
@@ -300,7 +212,7 @@ module Beanstalk
 
     def serve
 
-      con = connection('commands')
+      con = connection
 
       loop do
 
@@ -311,7 +223,7 @@ module Beanstalk
         command, params, client_id = Rufus::Json.decode(job.body)
 
         #puts '=' * 80
-        #p [ command, params, client_id, timestamp ]
+        #p [ command, params, client_id ]
 
         # NOTE : security risk
         #        have to check if command is authorized !
