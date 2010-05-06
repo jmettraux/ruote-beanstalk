@@ -17,3 +17,6 @@
     one of the disadvantages of msgs + commands is that
     schedules are not stored at the same place as the exps/workitems/...
 
+[ ] scheduled jobs : do not use delayed jobs
+    maybe push everything to the commands channel/system
+

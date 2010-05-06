@@ -134,7 +134,25 @@ module Beanstalk
 
     def delete_schedule (schedule_id)
 
-      connection('msgs').delete(schedule_id)
+      #begin
+      #job = connection('msgs').peek_job(schedule_id)
+      #p [ 0, job ]
+      #if job
+      #  job.reserve
+      #  job.delete
+      #end
+      #job = connection('msgs').peek_job(schedule_id)
+      #p [ 1, job ]
+      #rescue Exception => e
+      #p e
+      #puts e.backtrace.join("\n")
+      #end
+
+      # NOTE
+      #
+      # As of beanstalkd 1.4[.4] it's not possible to delete a delayed job
+      # So let's just ignore that for now and hope there isn't too much
+      # process instance rewriting going on...
     end
 
     def put (doc, opts={})
