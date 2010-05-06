@@ -31,6 +31,16 @@ require 'ruote'
 module Ruote
 module Beanstalk
 
+  class BsReceiveError < RuntimeError
+
+    attr_reader :fei
+
+    def initialize (fei)
+      @fei = fei
+      super("for #{Ruote::FlowExpressionId.to_storage_id(fei)}")
+    end
+  end
+
   class BsReceiver < Ruote::Receiver
 
     def initialize (cwes, beanstalk, tube, options={})
@@ -47,6 +57,7 @@ module Beanstalk
       con.ignore('default')
 
       loop do
+
         job = con.reserve
         job.delete
 
@@ -58,10 +69,20 @@ module Beanstalk
 
       type, data = Rufus::Json.decode(job.body)
 
-      case type
-        when 'workitem' then reply(workitem)
-        when 'error' then raise_error(data)
-        #else simply drop
+      if type == 'workitem'
+
+        # data holds a workitem (as a Hash)
+
+        reply(data)
+
+      elsif type == 'error'
+
+        # data holds a fei (FlowExpressionId) (as a Hash)
+
+        @context.error_handler.action_handle(
+          'dispatch', data, BsReceiveError.new(data))
+
+      #else simply drop
       end
     end
   end
