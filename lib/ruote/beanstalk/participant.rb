@@ -31,6 +31,37 @@ require 'ruote'
 module Ruote
 module Beanstalk
 
+  #
+  # This participant emits workitems towards a beanstalk queue.
+  #
+  #   engine.register_participant(
+  #     :heavy_labour,
+  #     :reply_by_default => true, :beanstalk => '127.0.0.1:11300')
+  #
+  # == workitem format
+  #
+  # TODO
+  #
+  # == cancel items
+  #
+  # TODO
+  #
+  # == extending this participant
+  #
+  # TODO
+  #
+  # == :reply_by_default
+  #
+  # TODO
+  #
+  # == :beanstalk
+  #
+  # TODO
+  #
+  # == :tube
+  #
+  # TODO
+  #
   class BsParticipant
 
     include Ruote::LocalParticipant

@@ -31,6 +31,11 @@ require 'ruote'
 module Ruote
 module Beanstalk
 
+  #
+  # NOTE : not sure about this one yet
+  #
+  # An error class for error emitted by the "remote side" and received here.
+  #
   class BsReceiveError < RuntimeError
 
     attr_reader :fei
@@ -41,26 +46,45 @@ module Beanstalk
     end
   end
 
+  #
+  # Whereas BsParticipant emits workitems (and cancelitems) to a Beanstalk
+  # queue, the receiver watches a Beanstalk queue/tube.
+  #
+  # == workitem format
+  #
+  # TODO
+  #
+  # == extending this receiver
+  #
+  # TODO
+  #
+  # == :tube
+  #
+  # TODO
+  #
   class BsReceiver < Ruote::Receiver
 
-    def initialize (cwes, beanstalk, tube, options={})
+    # cwes = context, worker, engine or storage
+    #
+    def initialize (cwes, beanstalk, options={})
 
       super(cwes, options)
 
-      Thread.new { listen(beanstalk, tube) }
+      Thread.new { listen(beanstalk, options['tube'] || 'default') }
     end
 
     def listen (beanstalk, tube)
 
       con = ::Beanstalk::Connection.new(beanstalk)
       con.watch(tube)
-      con.ignore('default')
+      con.ignore('default') unless tube == 'default'
 
       loop do
 
+        # TODO : wrap in a begin/rescue ?
+
         job = con.reserve
         job.delete
-
         process(job)
       end
     end
