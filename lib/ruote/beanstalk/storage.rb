@@ -239,6 +239,8 @@ module Beanstalk
       result
     end
 
+    COMMANDS = %w[ put get get_many delete ids purge! purge_type! dump ]
+
     def serve
 
       con = connection
@@ -254,11 +256,14 @@ module Beanstalk
         #puts '=' * 80
         #p [ command, params, client_id ]
 
-        # NOTE : security risk
-        #        have to check if command is authorized !
-
         result = begin
-          send(command, *params)
+
+          if COMMANDS.include?(command)
+            send(command, *params)
+          else
+            [ 'error', 'UnknownCommand', command ]
+          end
+
         rescue Exception => e
           #p e
           #e.backtrace.each { |l| puts l }

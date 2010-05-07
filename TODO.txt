@@ -10,9 +10,10 @@
     schedules are not stored at the same place as the exps/workitems/...
 [o] fork beanstalk S(d, 'iface:port', :fork => true)
 [o] operate : sign messages (tube AND timestamp)
+[o] security issue in #serve (send)
 
 [ ] operate : better name ?
 [ ] 'commands' channel : better name ?
 
-[ ] security issue in #serve (send)
+[ ] rw : document participant / receiver (use bs as an example)
 
