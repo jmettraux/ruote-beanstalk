@@ -205,10 +205,11 @@ module Beanstalk
       #p [ Thread.current.object_id, :operate, command, params ]
 
       client_id = "BsStorage-#{Thread.current.object_id}-#{$$}"
+      timestamp = Time.now.to_f.to_s
 
       con = connection
 
-      con.put(Rufus::Json.encode([ command, params, client_id ]))
+      con.put(Rufus::Json.encode([ command, params, client_id, timestamp ]))
 
       con.watch(client_id)
       con.ignore(TUBE_NAME)
@@ -217,10 +218,16 @@ module Beanstalk
 
       # NOTE : what about a timeout ?
 
-      #p [ Thread.current.object_id, :operate, command, :reserve ]
-      job = con.reserve
-      job.delete
-      result = Rufus::Json.decode(job.body)
+      loop do
+
+        #p [ Thread.current.object_id, :operate, command, :reserve ]
+        job = con.reserve
+        job.delete
+
+        result, ts = Rufus::Json.decode(job.body)
+
+        break if ts == timestamp # hopefully
+      end
 
       if result.is_a?(Array) && result.first == 'error'
         raise ArgumentError.new(result.last) if result[1] == 'ArgumentError'
@@ -242,7 +249,7 @@ module Beanstalk
         job = con.reserve
         job.delete
 
-        command, params, client_id = Rufus::Json.decode(job.body)
+        command, params, client_id, timestamp = Rufus::Json.decode(job.body)
 
         #puts '=' * 80
         #p [ command, params, client_id ]
@@ -259,7 +266,7 @@ module Beanstalk
         end
 
         con.use(client_id)
-        con.put(Rufus::Json.encode(result))
+        con.put(Rufus::Json.encode([ result, timestamp ]))
       end
     end
   end
