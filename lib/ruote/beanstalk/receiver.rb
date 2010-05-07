@@ -24,7 +24,6 @@
 
 require 'beanstalk-client'
 
-require 'ruote'
 #require 'ruote/receiver/base'
 
 

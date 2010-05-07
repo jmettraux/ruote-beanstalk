@@ -24,10 +24,7 @@
 
 require 'fileutils'
 require 'beanstalk-client'
-
-require 'rufus/cloche'
-require 'ruote/storage/base'
-require 'ruote/beanstalk/version'
+#require 'ruote/storage/base'
 
 
 module Ruote
@@ -42,7 +39,7 @@ module Beanstalk
 
     def initialize (uri, directory=nil, options=nil)
 
-      @uri = uri
+      @uri, address, port = split_uri(uri)
 
       directory, @options = if directory.nil?
         [ nil, {} ]
@@ -56,10 +53,24 @@ module Beanstalk
 
       if directory
 
+        require 'rufus/cloche'
+
         FileUtils.mkdir_p(directory)
 
         @cloche = Rufus::Cloche.new(
           :dir => directory, :nolock => @options['cloche_nolock'])
+      end
+
+      if fork_opts = @options[:fork]
+        #
+        # run beanstalk in a forked process
+
+        fork_opts = fork_opts.is_a?(Hash) ? fork_opts : {}
+        fork_opts = { :address => address, :port => port }.merge(fork_opts)
+
+        Ruote::Beanstalk.fork(fork_opts)
+
+        sleep 0.1
       end
 
       put_configuration
@@ -155,6 +166,17 @@ module Beanstalk
 
     CONN_KEY = '__ruote_beanstalk_connection'
     TUBE_NAME = 'ruote-storage-commands'
+
+    def split_uri (uri)
+
+      uri = ':' if uri == ''
+
+      address, port = uri.split(':')
+      address = '127.0.0.1' if address.strip == ''
+      port = 11300 if port.strip == ''
+
+      [ "#{address}:#{port}", address, port ]
+    end
 
     def connection
 

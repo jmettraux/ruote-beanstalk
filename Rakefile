@@ -33,6 +33,7 @@ beanstalk participant/receiver/storage for ruote (a ruby workflow engine)
   gem.test_file = 'test/test.rb'
 
   gem.add_dependency 'ruote', ">= #{Ruote::Beanstalk::VERSION}"
+  gem.add_dependency 'rufus-cloche', '>= 0.1.17'
   gem.add_dependency 'beanstalk-client', '>= 1.0.2'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'rake'

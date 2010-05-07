@@ -1,22 +1,19 @@
 
-[o] operate : sign messages
-
-[ ] operate : better name ?
-[ ] 'commands' channel : better name ?
-[ ] fork beanstalk S(d, 'iface:port', :fork => true)
-    :beanstalkd => true is probably better
-
-[ ] security issue in #serve (send)
-[ ] put_back in the operate loop ?
-
-[ ] test with beanstalk -b ruote_work/beanstalk/ or something
-
-[ ] drop the msgs idiosyncrasies ?
+[o] scheduled jobs : do not use delayed jobs
+[x] put_back in the operate loop ?
+[x] test with beanstalk -b ruote_work/beanstalk/ or something
+    no need for beanstalk binlog
+[o] drop the msgs idiosyncrasies ?
     at first try to go all the way with msgs vs commands
     |
     one of the disadvantages of msgs + commands is that
     schedules are not stored at the same place as the exps/workitems/...
+[o] fork beanstalk S(d, 'iface:port', :fork => true)
 
-[ ] scheduled jobs : do not use delayed jobs
-    maybe push everything to the commands channel/system
+[ ] operate : better name ?
+[ ] 'commands' channel : better name ?
+
+[ ] security issue in #serve (send)
+
+[ ] operate : sign messages (tube AND timestamp)
 

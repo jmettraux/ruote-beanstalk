@@ -9,12 +9,29 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Mettraux"]
-  s.date = %q{2010-05-03}
+  s.date = %q{2010-05-07}
   s.description = %q{beanstalk participant/receiver/storage for ruote (a ruby workflow engine)}
   s.email = %q{jmettraux@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
      "README.rdoc"
+  ]
+  s.files = [
+    "CHANGELOG.txt",
+     "LICENSE.txt",
+     "README.rdoc",
+     "Rakefile",
+     "TODO.txt",
+     "lib/ruote-beanstalk.rb",
+     "lib/ruote/beanstalk.rb",
+     "lib/ruote/beanstalk/fork.rb",
+     "lib/ruote/beanstalk/participant.rb",
+     "lib/ruote/beanstalk/receiver.rb",
+     "lib/ruote/beanstalk/storage.rb",
+     "lib/ruote/beanstalk/version.rb",
+     "ruote-beanstalk.gemspec",
+     "serve.rb",
+     "test/integration_connection.rb"
   ]
   s.homepage = %q{http://github.com/jmettraux/ruote-beanstalk}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -32,12 +49,14 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<ruote>, [">= 2.1.10"])
+      s.add_runtime_dependency(%q<rufus-cloche>, [">= 0.1.17"])
       s.add_runtime_dependency(%q<beanstalk-client>, [">= 1.0.2"])
       s.add_development_dependency(%q<yard>, [">= 0"])
       s.add_development_dependency(%q<rake>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
       s.add_dependency(%q<ruote>, [">= 2.1.10"])
+      s.add_dependency(%q<rufus-cloche>, [">= 0.1.17"])
       s.add_dependency(%q<beanstalk-client>, [">= 1.0.2"])
       s.add_dependency(%q<yard>, [">= 0"])
       s.add_dependency(%q<rake>, [">= 0"])
@@ -45,6 +64,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<ruote>, [">= 2.1.10"])
+    s.add_dependency(%q<rufus-cloche>, [">= 0.1.17"])
     s.add_dependency(%q<beanstalk-client>, [">= 1.0.2"])
     s.add_dependency(%q<yard>, [">= 0"])
     s.add_dependency(%q<rake>, [">= 0"])
