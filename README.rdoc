@@ -13,6 +13,8 @@ BsStorage listens to a Beanstalk queue where it receives storage orders that it 
 
 (Initially I tried to use Beanstalk for msgs and schedules as well, but since you can't delete a delayed message in Beanstalk (as of now), I fell back to using Beanstalk as middleware, it's slightly slower, but much simpler and robust).
 
+RDOC : http://ruote.rubyforge.org/ruote-beanstalk_rdoc/
+
 
 == usage
 
