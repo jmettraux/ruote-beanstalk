@@ -35,14 +35,21 @@ module Beanstalk
   #
   def self.fork (opts={})
 
+    quiet = opts.delete(:quiet)
+    no_kill = opts.delete(:no_kill_at_exit)
+
     opts = opts.inject([]) { |a, (k, v)| a << "-#{OPT_KEYS[k]} #{v}" }.join(' ')
 
     cpid = Process.fork do
-      puts "beanstalkd #{opts}"
+      puts "beanstalkd #{opts}" unless quiet
       exec "beanstalkd #{opts}"
     end
 
-    at_exit { Process.kill(9, cpid) }
+    unless no_kill
+      at_exit { Process.kill(9, cpid) }
+    end
+
+    cpid
   end
 end
 end

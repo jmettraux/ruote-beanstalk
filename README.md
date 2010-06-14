@@ -32,7 +32,7 @@ There are two modes in which BsStorage can be used :
 
 There should always be at least 1 server and 1 client.
 
-<a href="http://github.com/jmettraux/ruote-beanstalk/raw/master/doc/storages.png"><img src="http://github.com/jmettraux/ruote-beanstalk/raw/master/doc/storages.png" /></a>
+<a href="http://github.com/jmettraux/ruote-beanstalk/raw/ruote2.1/doc/storages.png"><img src="http://github.com/jmettraux/ruote-beanstalk/raw/ruote2.1/doc/storages.png" /></a>
 
 Beanstalk is the intermediary.
 
