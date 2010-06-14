@@ -17,3 +17,5 @@
 
 [ ] rw : document participant / receiver (use bs as an example)
 
+[ ] receiver : launchitem ?
+

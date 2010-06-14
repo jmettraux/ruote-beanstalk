@@ -21,9 +21,9 @@ Jeweler::Tasks.new do |gem|
 
   gem.version = Ruote::Beanstalk::VERSION
   gem.name = 'ruote-beanstalk'
-  gem.summary = 'beanstalk participant/receiver/storage for ruote (a ruby workflow engine)'
+  gem.summary = 'Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)'
   gem.description = %{
-beanstalk participant/receiver/storage for ruote (a ruby workflow engine)
+Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)
   }.strip
   gem.email = 'jmettraux@gmail.com'
   gem.homepage = 'http://github.com/jmettraux/ruote-beanstalk'

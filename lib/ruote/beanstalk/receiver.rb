@@ -49,17 +49,33 @@ module Beanstalk
   # Whereas BsParticipant emits workitems (and cancelitems) to a Beanstalk
   # queue, the receiver watches a Beanstalk queue/tube.
   #
+  # An example initialization :
+  #
+  #   Ruote::Beanstalk::BsReceiver.new(
+  #     engine, '127.0.0.1:11300', :tube => 'out')
+  #
+  #
   # == workitem format
   #
-  # TODO
+  # BsParticipant and BsReceiver share the same format :3
+  #
+  #   [ 'workitem', workitem_as_a_hash ]
+  #     # or
+  #   [ 'error', error_details_as_a_string ]
+  #
   #
   # == extending this receiver
   #
-  # TODO
+  # Feel free to extend this class and override the listen or the process
+  # method.
+  #
   #
   # == :tube
   #
-  # TODO
+  # Indicates to the receiver which beanstalk tube it should listen to.
+  #
+  #   Ruote::Beanstalk::BsReceiver.new(
+  #     engine, '127.0.0.1:11300', :tube => 'out')
   #
   class BsReceiver < Ruote::Receiver
 
@@ -69,8 +85,12 @@ module Beanstalk
 
       super(cwes, options)
 
-      Thread.new { listen(beanstalk, options['tube'] || 'default') }
+      Thread.new do
+        listen(beanstalk, options['tube'] || options[:tube] || 'default')
+      end
     end
+
+    protected
 
     def listen (beanstalk, tube)
 
@@ -80,12 +100,13 @@ module Beanstalk
 
       loop do
 
-        # TODO : wrap in a begin/rescue ?
-
         job = con.reserve
         job.delete
         process(job)
       end
+
+    rescue EOFError => ee
+      # over
     end
 
     def process (job)
