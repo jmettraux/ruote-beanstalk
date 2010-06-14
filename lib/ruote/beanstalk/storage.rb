@@ -30,9 +30,42 @@ require 'beanstalk-client'
 module Ruote
 module Beanstalk
 
+  #
+  # An error class just for BsStorage.
+  #
   class BsStorageError < RuntimeError
   end
 
+  #
+  # This ruote storage can be used in two modes : client and server.
+  #
+  # Beanstalk is the medium.
+  #
+  # == client
+  #
+  # The storage is pointed at a beanstalk queue
+  #
+  #   engine = Ruote::Engine.new(
+  #     Ruote::Worker.new(
+  #       Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)))
+  #
+  # All the operations (put, get, get_many, ...) of the storage are done
+  # by a server, connected to the same beanstalk queue.
+  #
+  # == server
+  #
+  # The storage point to a beanstalk queue and receives orders from clients
+  # via the queue.
+  #
+  #   Ruote::Beanstalk::BsStorage.new(':11300', 'ruote_work', :fork => true)
+  #
+  # Note the directory passed as a string. When in server mode, this storage
+  # uses an embedded Ruote::FsStorage for the actual storage.
+  #
+  # The :fork => true lets the storage start and adjacent OS process containing
+  # the Beanstalk server. The storage takes care of stopping the beanstalk
+  # server when the Ruby process exits.
+  #
   class BsStorage
 
     include Ruote::StorageBase
@@ -52,6 +85,8 @@ module Beanstalk
       @cloche = nil
 
       if directory
+        #
+        # run embedded Ruote::FsStorage
 
         require 'rufus/cloche'
 
@@ -149,6 +184,8 @@ module Beanstalk
     # Mainly used by ruote's test/unit/ut_17_storage.rb
     #
     def add_type (type)
+
+      # nothing to do
     end
 
     # Nukes a db type and reputs it (losing all the documents that were in it).
@@ -202,8 +239,6 @@ module Beanstalk
 
     def operate (command, params)
 
-      #p [ Thread.current.object_id, :operate, command, params ]
-
       client_id = "BsStorage-#{Thread.current.object_id}-#{$$}"
       timestamp = Time.now.to_f.to_s
 
@@ -220,7 +255,6 @@ module Beanstalk
 
       loop do
 
-        #p [ Thread.current.object_id, :operate, command, :reserve ]
         job = con.reserve
         job.delete
 
@@ -234,8 +268,6 @@ module Beanstalk
         raise BsStorageError.new(result.last)
       end
 
-      #p [ Thread.current.object_id, :operate, command, :over ]
-
       result
     end
 
@@ -247,14 +279,10 @@ module Beanstalk
 
       loop do
 
-        #p [ Thread.current.object_id, :serve ]
         job = con.reserve
         job.delete
 
         command, params, client_id, timestamp = Rufus::Json.decode(job.body)
-
-        #puts '=' * 80
-        #p [ command, params, client_id ]
 
         result = begin
 
