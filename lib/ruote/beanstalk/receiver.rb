@@ -126,6 +126,12 @@ module Beanstalk
         @context.error_handler.action_handle(
           'dispatch', data, BsReceiveError.new(data))
 
+      elsif type == 'launchitem'
+
+        pdef, fields, variables = data
+
+        launch(pdef, fields, variables)
+
       #else simply drop
       end
     end

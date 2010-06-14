@@ -1,3 +1,4 @@
+# encoding: UTF-8
 
 #
 # testing ruote-beanstalk
@@ -76,6 +77,36 @@ class FtParticipantTest < Test::Unit::TestCase
     r = @engine.wait_for(wfid)
 
     assert_equal 'world', r['workitem']['fields']['hello']
+  end
+
+  def test_launchitem
+
+    sp = @engine.register_participant '.+', Ruote::StorageParticipant
+
+    Ruote::Beanstalk::BsReceiver.new(
+      @engine, '127.0.0.1:11300', :tube => 'launch')
+
+    #@engine.context.logger.noisy = true
+
+    pdef = Ruote.process_definition do
+      alpha
+    end
+
+    #fields = { 'hello' => '上海' }
+    fields = { 'hello' => 'shangai' }
+
+    launchitem = [ 'launchitem', [ pdef, fields, {} ] ]
+
+    con = ::Beanstalk::Connection.new('127.0.0.1:11300')
+    con.use('launch')
+    con.put(Rufus::Json.encode(launchitem) + "\r\n")
+
+    sleep 1
+
+    assert_equal 1, sp.size
+    assert_equal 'alpha', sp.first.participant_name
+    #assert_equal '上海', sp.first.fields['hello']
+    assert_equal 'shangai', sp.first.fields['hello']
   end
 end
 

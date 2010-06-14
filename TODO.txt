@@ -11,11 +11,10 @@
 [o] fork beanstalk S(d, 'iface:port', :fork => true)
 [o] operate : sign messages (tube AND timestamp)
 [o] security issue in #serve (send)
+[o] receiver : launchitem ?
+[o] 'commands' channel : better name ?
 
 [ ] operate : better name ?
-[ ] 'commands' channel : better name ?
 
 [ ] rw : document participant / receiver (use bs as an example)
-
-[ ] receiver : launchitem ?
 
