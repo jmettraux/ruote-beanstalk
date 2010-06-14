@@ -22,9 +22,18 @@ RDOC : http://ruote.rubyforge.org/ruote-beanstalk_rdoc/
 
 TODO
 
+
 === Ruote::Beanstalk::BsStorage
 
-TODO
+Pass a string of the form host:port and a hash of options :
+
+  Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)
+
+Wrapped in an engine + worker :
+
+  engine = Ruote::Engine.new(
+    Ruote::Worker.new(
+      Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)))
 
 
 == running tests
@@ -38,7 +47,7 @@ TODO
 assuming you have
 
   ruote/
-  ruote-redis/
+  ruote-beanstalk/
 
 * unit tests :
 
