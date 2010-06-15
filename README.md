@@ -20,7 +20,26 @@ RDOC : http://ruote.rubyforge.org/ruote-beanstalk_rdoc/
 
 ### Ruote::Beanstalk::BsParticipant and BsReceiver
 
-TODO
+Registering a Beanstalk participant :
+
+    @engine.register_participant(
+      'alpha',
+      Ruote::Beanstalk::BsParticipant,
+      'beanstalk' => '127.0.0.1:11300',
+      'tube' => 'ruote-workitems')
+
+
+Binding a listener to a storage or an engine :
+
+    Ruote::Beanstalk::BsReceiver.new(
+      engine, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
+
+        # or
+
+    Ruote::Beanstalk::BsReceiver.new(
+      storage, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
+
+The receiver manages a thread that listens to incoming messages and feeds them to ruote via the engine or directly via a storage.
 
 
 ### Ruote::Beanstalk::BsStorage
@@ -62,7 +81,12 @@ This piece of ruby starts a Beanstalk instance (:fork => true) and starts a BsSt
 
 ### Ruote::Beanstalk::BsParticipant and BsReceiver
 
-TODO
+Simply do
+
+    ruby test/test.rb
+
+in your ruote-beanstalk/ directory.
+
 
 ### Ruote::Beanstalk::BsStorage
 
@@ -70,6 +94,13 @@ assuming you have
 
     ruote/
     ruote-beanstalk/
+
+In a separate terminal, go to ruote-beanstalk/ and launch
+
+    ruby serve.rb
+
+To launch a beanstalkd + fs storage couple, then run unit or functional tests
+
 
 * unit tests :
 
