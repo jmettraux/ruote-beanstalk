@@ -99,7 +99,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
     con = ::Beanstalk::Connection.new('127.0.0.1:11300')
     con.use('launch')
-    con.put(Rufus::Json.encode(launchitem) + "\r\n")
+    con.put(Rufus::Json.encode(launchitem))
 
     sleep 1
 

@@ -31,8 +31,6 @@ module Ruote
 module Beanstalk
 
   #
-  # NOTE : not sure about this one yet
-  #
   # An error class for error emitted by the "remote side" and received here.
   #
   class BsReceiveError < RuntimeError
@@ -109,9 +107,19 @@ module Beanstalk
       # over
     end
 
+    # Is meant to return a hash with a first element that is either
+    # 'workitem', 'error' or 'launchitem' (a type).
+    # The second element depends on the type.
+    # It's mappend on Ruote::Beanstalk::BsParticipant anyway.
+    #
+    def decode (job)
+
+      Rufus::Json.decode(job.body)
+    end
+
     def process (job)
 
-      type, data = Rufus::Json.decode(job.body)
+      type, data = decode(job)
 
       if type == 'workitem'
 

@@ -37,29 +37,66 @@ module Beanstalk
   #     :heavy_labour,
   #     :reply_by_default => true, :beanstalk => '127.0.0.1:11300')
   #
+  #
   # == workitem format
   #
-  # TODO
+  # Workitems are encoded in the format
+  #
+  #   [ 'workitem', workitem.to_h ]
+  #
+  # and then serialized as JSON strings.
+  #
   #
   # == cancel items
   #
-  # TODO
+  # Like workitems, but the format is
+  #
+  #   [ 'cancelitem', fei.to_h, flavour.to_s ]
+  #
+  # where fei is the FlowExpressionId of the expression getting cancelled
+  # (and whose workitems are to be retired) and flavour is either 'cancel' or
+  # 'kill'.
+  #
   #
   # == extending this participant
   #
-  # TODO
+  # Extend and overwrite encode_workitem and encode_cancelitem or
+  # simply re-open the class and change those methods.
   #
-  # == :reply_by_default
-  #
-  # TODO
   #
   # == :beanstalk
   #
-  # TODO
+  # Indicates which beanstalk to talk to
+  #
+  #   engine.register_participant(
+  #     'alice'
+  #     Ruote::Beanstalk::BsParticipant,
+  #     'beanstalk' => '127.0.0.1:11300')
+  #
   #
   # == :tube
   #
-  # TODO
+  # Most of the time, you want the workitems (or the cancelitems) to be
+  # emitted over/in a specific tube
+  #
+  #   engine.register_participant(
+  #     'alice'
+  #     Ruote::Beanstalk::BsParticipant,
+  #     'beanstalk' => '127.0.0.1:11300',
+  #     'tube' => 'ruote-workitems')
+  #
+  #
+  # == :reply_by_default
+  #
+  # If the participant is configured with 'reply_by_default' => true, the
+  # participant will dispatch the workitem over to Beanstalk and then
+  # immediately reply to its ruote engine (letting the flow resume).
+  #
+  #   engine.register_participant(
+  #     'alice'
+  #     Ruote::Beanstalk::BsParticipant,
+  #     'beanstalk' => '127.0.0.1:11300',
+  #     'reply_by_default' => true)
   #
   class BsParticipant
 
