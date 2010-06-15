@@ -9,19 +9,25 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Mettraux"]
-  s.date = %q{2010-05-07}
-  s.description = %q{beanstalk participant/receiver/storage for ruote (a ruby workflow engine)}
+  s.date = %q{2010-06-15}
+  s.description = %q{Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)}
   s.email = %q{jmettraux@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
-     "README.rdoc"
+     "README.md"
   ]
   s.files = [
     "CHANGELOG.txt",
      "LICENSE.txt",
-     "README.rdoc",
+     "README.md",
      "Rakefile",
      "TODO.txt",
+     "doc/storages.graffle/QuickLook/Preview.pdf",
+     "doc/storages.graffle/QuickLook/Thumbnail.tiff",
+     "doc/storages.graffle/data.plist",
+     "doc/storages.graffle/image1.png",
+     "doc/storages.graffle/image2.png",
+     "doc/storages.png",
      "lib/ruote-beanstalk.rb",
      "lib/ruote/beanstalk.rb",
      "lib/ruote/beanstalk/fork.rb",
@@ -31,14 +37,19 @@ Gem::Specification.new do |s|
      "lib/ruote/beanstalk/version.rb",
      "ruote-beanstalk.gemspec",
      "serve.rb",
-     "test/integration_connection.rb"
+     "test/functional/base.rb",
+     "test/functional/ft_0_participant.rb",
+     "test/functional/ft_1_receiver.rb",
+     "test/functional/test.rb",
+     "test/functional_connection.rb",
+     "test/test.rb"
   ]
   s.homepage = %q{http://github.com/jmettraux/ruote-beanstalk}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{ruote}
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{beanstalk participant/receiver/storage for ruote (a ruby workflow engine)}
+  s.summary = %q{Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)}
   s.test_files = [
     "test/test.rb"
   ]
