@@ -2,7 +2,10 @@
 = ruote-beanstalk - CHANGELOG.txt
 
 
-== ruote-beanstalk 2.1.10    release 2010/06/15
+== ruote-beanstalk 2.1.11    not yet released
+
+
+== ruote-beanstalk 2.1.10    released 2010/06/15
 
 - initial release
 
