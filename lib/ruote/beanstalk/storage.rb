@@ -174,11 +174,16 @@ module Beanstalk
 
       Thread.list.each do |t|
         t.keys.each do |k|
-          next unless k.match(/^BeanstalkConnection\_/)
+          next unless k.to_s.match(CONN_KEY)
           t[k].close
           t[k] = nil
         end
       end
+    end
+
+    def close
+
+      shutdown
     end
 
     # Mainly used by ruote's test/unit/ut_17_storage.rb
@@ -201,7 +206,7 @@ module Beanstalk
 
     protected
 
-    CONN_KEY = '__ruote_beanstalk_connection'
+    CONN_KEY = 'ruote-beanstalk-connection'
     TUBE_NAME = 'ruote-storage-commands'
 
     def split_uri (uri)

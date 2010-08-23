@@ -14,10 +14,12 @@
 [o] receiver : launchitem ?
 [o] 'commands' channel : better name ?
 [o] rw : document participant / receiver (use bs as an example)
+[o] storage.close
 
 [ ] operate : better name ?
 
 [ ] base64 encode/decode to allow for non-ascii values
+    => add some 漢字 test to ruote/test/unit/storage.rb
 
-[ ] follow example of latest ruote-amqp
+[ ] follow example of latest ruote-amqp (for what ?)
 
