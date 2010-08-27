@@ -37,14 +37,14 @@ module Beanstalk
 
     attr_reader :fei
 
-    def initialize (fei)
+    def initialize(fei)
       @fei = fei
       super("for #{Ruote::FlowExpressionId.to_storage_id(fei)}")
     end
   end
 
   #
-  # Whereas BsParticipant emits workitems (and cancelitems) to a Beanstalk
+  # Whereas BsParticipant emits workitems(and cancelitems) to a Beanstalk
   # queue, the receiver watches a Beanstalk queue/tube.
   #
   # An example initialization :
@@ -79,7 +79,7 @@ module Beanstalk
 
     # cwes = context, worker, engine or storage
     #
-    def initialize (cwes, beanstalk, options={})
+    def initialize(cwes, beanstalk, options={})
 
       super(cwes, options)
 
@@ -90,7 +90,7 @@ module Beanstalk
 
     protected
 
-    def listen (beanstalk, tube)
+    def listen(beanstalk, tube)
 
       con = ::Beanstalk::Connection.new(beanstalk)
       con.watch(tube)
@@ -108,28 +108,28 @@ module Beanstalk
     end
 
     # Is meant to return a hash with a first element that is either
-    # 'workitem', 'error' or 'launchitem' (a type).
+    # 'workitem', 'error' or 'launchitem'(a type).
     # The second element depends on the type.
     # It's mappend on Ruote::Beanstalk::BsParticipant anyway.
     #
-    def decode (job)
+    def decode(job)
 
       Rufus::Json.decode(job.body)
     end
 
-    def process (job)
+    def process(job)
 
       type, data = decode(job)
 
       if type == 'workitem'
 
-        # data holds a workitem (as a Hash)
+        # data holds a workitem(as a Hash)
 
         reply(data)
 
       elsif type == 'error'
 
-        # data holds a fei (FlowExpressionId) (as a Hash)
+        # data holds a fei(FlowExpressionId) (as a Hash)
 
         @context.error_handler.action_handle(
           'dispatch', data, BsReceiveError.new(data))

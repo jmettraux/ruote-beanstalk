@@ -102,29 +102,29 @@ module Beanstalk
 
     include Ruote::LocalParticipant
 
-    def initialize (opts)
+    def initialize(opts)
 
       @opts = opts
     end
 
-    def consume (workitem)
+    def consume(workitem)
 
       connection.put(encode_workitem(workitem))
 
       reply(workitem) if @opts['reply_by_default']
     end
 
-    def cancel (fei, flavour)
+    def cancel(fei, flavour)
 
       connection.put(encode_cancelitem(fei, flavour))
     end
 
-    def encode_workitem (workitem)
+    def encode_workitem(workitem)
 
       Rufus::Json.encode([ 'workitem', workitem.to_h ])
     end
 
-    def encode_cancelitem (fei, flavour)
+    def encode_cancelitem(fei, flavour)
 
       Rufus::Json.encode([ 'cancelitem', fei.to_h, flavour.to_s ])
     end

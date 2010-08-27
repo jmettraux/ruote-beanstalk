@@ -33,7 +33,7 @@ module Beanstalk
   # :binlog
   # :user
   #
-  def self.fork (opts={})
+  def self.fork(opts={})
 
     quiet = opts.delete(:quiet)
     no_kill = opts.delete(:no_kill_at_exit)

@@ -49,7 +49,7 @@ module Beanstalk
   #     Ruote::Worker.new(
   #       Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)))
   #
-  # All the operations (put, get, get_many, ...) of the storage are done
+  # All the operations(put, get, get_many, ...) of the storage are done
   # by a server, connected to the same beanstalk queue.
   #
   # == server
@@ -70,7 +70,7 @@ module Beanstalk
 
     include Ruote::StorageBase
 
-    def initialize (uri, directory=nil, options=nil)
+    def initialize(uri, directory=nil, options=nil)
 
       @uri, address, port = split_uri(uri)
 
@@ -113,7 +113,21 @@ module Beanstalk
       serve if @cloche
     end
 
-    def put (doc, opts={})
+    # One catch : will return [] in case of [network] error
+    #
+    def get_msgs
+
+      super rescue []
+    end
+
+    # One catch : will return true (failure) in case of [network] error
+    #
+    def reserve(doc)
+
+      super(doc) rescue true
+    end
+
+    def put(doc, opts={})
 
       doc.merge!('put_at' => Ruote.now_to_utc_s)
 
@@ -123,33 +137,33 @@ module Beanstalk
 
       return r unless r.nil?
 
-      doc['_rev'] = (doc['_rev'] || -1) + 1 if opts[:update_rev]
+      doc['_rev'] =(doc['_rev'] || -1) + 1 if opts[:update_rev]
 
       nil
     end
 
-    def get (type, key)
+    def get(type, key)
 
       return @cloche.get(type, key) if @cloche
 
       operate('get', [ type, key ])
     end
 
-    def delete (doc)
+    def delete(doc)
 
       return @cloche.delete(doc) if @cloche
 
       operate('delete', [ doc ])
     end
 
-    def get_many (type, key=nil, opts={})
+    def get_many(type, key=nil, opts={})
 
       return @cloche.get_many(type, key, opts) if @cloche
 
       operate('get_many', [ type, key, opts ])
     end
 
-    def ids (type)
+    def ids(type)
 
       return @cloche.ids(type) if @cloche
 
@@ -165,7 +179,7 @@ module Beanstalk
       end
     end
 
-    def dump (type)
+    def dump(type)
 
       get_many(type)
     end
@@ -188,14 +202,14 @@ module Beanstalk
 
     # Mainly used by ruote's test/unit/ut_17_storage.rb
     #
-    def add_type (type)
+    def add_type(type)
 
       # nothing to do
     end
 
-    # Nukes a db type and reputs it (losing all the documents that were in it).
+    # Nukes a db type and reputs it(losing all the documents that were in it).
     #
-    def purge_type! (type)
+    def purge_type!(type)
 
       if @cloche
         @cloche.purge_type!(type)
@@ -209,7 +223,7 @@ module Beanstalk
     CONN_KEY = 'ruote-beanstalk-connection'
     TUBE_NAME = 'ruote-storage-commands'
 
-    def split_uri (uri)
+    def split_uri(uri)
 
       uri = ':' if uri == ''
 
@@ -233,7 +247,7 @@ module Beanstalk
 
     # Don't put configuration if it's already in
     #
-    # (avoid storages from trashing configuration...)
+    #(avoid storages from trashing configuration...)
     #
     def put_configuration
 
@@ -242,7 +256,7 @@ module Beanstalk
       put({ '_id' => 'engine', 'type' => 'configurations' }.merge(@options))
     end
 
-    def operate (command, params)
+    def operate(command, params)
 
       client_id = "BsStorage-#{Thread.current.object_id}-#{$$}"
       timestamp = Time.now.to_f.to_s
