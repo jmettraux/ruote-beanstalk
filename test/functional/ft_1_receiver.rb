@@ -31,7 +31,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
   class HelloServer
 
-    def initialize (port, tube_in, tube_out)
+    def initialize(port, tube_in, tube_out)
 
       @connection = ::Beanstalk::Connection.new("127.0.0.1:#{port}", tube_in)
 

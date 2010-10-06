@@ -32,7 +32,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
     attr_reader :jobs
 
-    def initialize (port, tube=nil)
+    def initialize(port, tube=nil)
 
       @connection = ::Beanstalk::Connection.new("127.0.0.1:#{port}", tube)
 
