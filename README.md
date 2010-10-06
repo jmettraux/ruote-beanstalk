@@ -3,7 +3,7 @@
 
 Beanstalk extensions for ruote 2.1 (a Ruby workflow engine).
 
-"Beanstalk is a simple, fast workqueue service" (http://kr.github.com/beanstalkd/).
+[Beanstalk is a simple, fast workqueue service](http://kr.github.com/beanstalkd/).
 
 ruote-beanstalk provides a participant/receiver pair. Emitting workitems to a Beanstalk queue/tube and listening/receiving them back. Workers can connect to the Beanstalk queue, receive workitems, do some work and then (optionally) send the updated workitem back to the ruote system.
 
@@ -13,7 +13,7 @@ BsStorage listens to a Beanstalk queue where it receives storage orders that it 
 
 (Initially I tried to use Beanstalk for msgs and schedules as well, but since you can't delete a delayed message in Beanstalk (as of now), I fell back to using Beanstalk as middleware, it's slightly slower, but much simpler and robust).
 
-RDOC : http://ruote.rubyforge.org/ruote-beanstalk_rdoc/
+rdoc : [http://ruote.rubyforge.org/ruote-beanstalk_rdoc/](http://ruote.rubyforge.org/ruote-beanstalk_rdoc/)
 
 
 ## usage
@@ -122,15 +122,15 @@ MIT
 
 ## links
 
-* http://kr.github.com/beanstalkd/
+* (http://kr.github.com/beanstalkd/)[http://kr.github.com/beanstalkd/]
 
-* http://ruote.rubyforge.org/
-* http://github.com/jmettraux/ruote-beanstalk
+* (http://ruote.rubyforge.org/)[http://ruote.rubyforge.org/]
+* (http://github.com/jmettraux/ruote-beanstalk)[http://github.com/jmettraux/ruote-beanstalk]
 
 
 ## feedback
 
-mailing list : http://groups.google.com/group/openwferu-users
+mailing list : (http://groups.google.com/group/openwferu-users)[http://groups.google.com/group/openwferu-users]
 irc : irc.freenode.net #ruote
 
 
