@@ -22,4 +22,5 @@
     => add some 漢字 test to ruote/test/unit/storage.rb
 
 [ ] follow example of latest ruote-amqp (for what ?)
+[ ] ParticipantProxy ?
 

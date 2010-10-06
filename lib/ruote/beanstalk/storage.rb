@@ -286,11 +286,15 @@ module Beanstalk
 
       result = nil
 
-      # NOTE : what about a timeout ?
-
       loop do
 
-        job = con.reserve
+        job = nil
+        begin
+          job = con.reserve
+        rescue Exception => e
+          # probably our timeout
+          break
+        end
         job.delete
 
         result, ts = Rufus::Json.decode(job.body)
