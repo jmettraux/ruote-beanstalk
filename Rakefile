@@ -47,24 +47,6 @@ Jeweler::GemcutterTasks.new
 #
 # DOC
 
-#begin
-#
-#  require 'yard'
-#
-#  YARD::Rake::YardocTask.new do |doc|
-#    doc.options = [
-#      '-o', 'html/ruote-beanstalk', '--title',
-#      "ruote-beanstalk #{Ruote::Beanstalk::VERSION}"
-#    ]
-#  end
-#
-#rescue LoadError
-#
-#  task :yard do
-#    abort "YARD is not available : sudo gem install yard"
-#  end
-#end
-
 #
 # make sure to have rdoc 2.5.x to run that
 #

@@ -106,13 +106,13 @@ To launch a beanstalkd + fs storage couple, then run unit or functional tests
 
 get into ruote/ and do
 
-    ruby test/unit/storage.rb --beanstalk
+    ruby test/unit/storage.rb -- --beanstalk
 
 * functional tests :
 
 get into ruote/ and do
 
-    ruby test/functional/test.rb --beanstalk
+    ruby test/functional/test.rb -- --beanstalk
 
 
 ## license

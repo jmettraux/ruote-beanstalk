@@ -247,7 +247,7 @@ module Beanstalk
 
     # Don't put configuration if it's already in
     #
-    #(avoid storages from trashing configuration...)
+    # (avoid storages from trashing configuration...)
     #
     def put_configuration
 
