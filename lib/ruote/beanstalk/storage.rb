@@ -158,9 +158,16 @@ module Beanstalk
 
     def get_many(type, key=nil, opts={})
 
-      return @cloche.get_many(type, key, opts) if @cloche
+      return operate('get_many', [ type, key, opts ]) unless @cloche
 
-      operate('get_many', [ type, key, opts ])
+      if key
+        key = Array(key).collect { |k|
+          k[0..6] == '(?-mix:' ? Regexp.new(k[7..-2]) : "!#{k}"
+        } if key
+      end
+        # assuming /!#{wfid}$/...
+
+      @cloche.get_many(type, key, opts)
     end
 
     def ids(type)
@@ -237,6 +244,15 @@ module Beanstalk
     def connection
 
       c = Thread.current[CONN_KEY]
+
+      #begin
+      #  c.stats
+      #  return c
+      #rescue Exception => e
+      #  c = nil
+      #end if c
+        # keeping around the idea around
+
       return c if c
 
       c = ::Beanstalk::Connection.new(@uri, TUBE_NAME)
