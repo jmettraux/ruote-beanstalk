@@ -59,11 +59,11 @@ class FtParticipantTest < Test::Unit::TestCase
 
     @engine.register_participant(
       :alpha,
-      Ruote::Beanstalk::BsParticipant,
+      Ruote::Beanstalk::ParticipantProxy,
       'beanstalk' => '127.0.0.1:11300',
       'tube' => 'in')
 
-    Ruote::Beanstalk::BsReceiver.new(
+    Ruote::Beanstalk::Receiver.new(
       @engine, '127.0.0.1:11300', :tube => 'out')
 
     echo = HelloServer.new(11300, 'in', 'out')
@@ -83,7 +83,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
     sp = @engine.register_participant '.+', Ruote::StorageParticipant
 
-    Ruote::Beanstalk::BsReceiver.new(
+    Ruote::Beanstalk::Receiver.new(
       @engine, '127.0.0.1:11300', :tube => 'launch')
 
     #@engine.context.logger.noisy = true

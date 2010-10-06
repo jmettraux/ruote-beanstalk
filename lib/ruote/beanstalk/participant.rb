@@ -70,7 +70,7 @@ module Beanstalk
   #
   #   engine.register_participant(
   #     'alice'
-  #     Ruote::Beanstalk::BsParticipant,
+  #     Ruote::Beanstalk::ParticipantProxy,
   #     'beanstalk' => '127.0.0.1:11300')
   #
   #
@@ -81,7 +81,7 @@ module Beanstalk
   #
   #   engine.register_participant(
   #     'alice'
-  #     Ruote::Beanstalk::BsParticipant,
+  #     Ruote::Beanstalk::ParticipantProxy,
   #     'beanstalk' => '127.0.0.1:11300',
   #     'tube' => 'ruote-workitems')
   #
@@ -94,11 +94,11 @@ module Beanstalk
   #
   #   engine.register_participant(
   #     'alice'
-  #     Ruote::Beanstalk::BsParticipant,
+  #     Ruote::Beanstalk::ParticipantProxy,
   #     'beanstalk' => '127.0.0.1:11300',
   #     'reply_by_default' => true)
   #
-  class BsParticipant
+  class ParticipantProxy
 
     include Ruote::LocalParticipant
 

@@ -18,25 +18,25 @@ rdoc : [http://ruote.rubyforge.org/ruote-beanstalk_rdoc/](http://ruote.rubyforge
 
 ## usage
 
-### Ruote::Beanstalk::BsParticipant and BsReceiver
+### Ruote::Beanstalk::ParticipantProxy and Receiver
 
 Registering a Beanstalk participant :
 
     @engine.register_participant(
       'alpha',
-      Ruote::Beanstalk::BsParticipant,
+      Ruote::Beanstalk::ParticipantProxy,
       'beanstalk' => '127.0.0.1:11300',
       'tube' => 'ruote-workitems')
 
 
 Binding a listener to a storage or an engine :
 
-    Ruote::Beanstalk::BsReceiver.new(
+    Ruote::Beanstalk::Receiver.new(
       engine, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
 
         # or
 
-    Ruote::Beanstalk::BsReceiver.new(
+    Ruote::Beanstalk::Receiver.new(
       storage, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
 
 The receiver manages a thread that listens to incoming messages and feeds them to ruote via the engine or directly via a storage.
@@ -79,7 +79,7 @@ This piece of ruby starts a Beanstalk instance (:fork => true) and starts a BsSt
 
 ## running tests
 
-### Ruote::Beanstalk::BsParticipant and BsReceiver
+### Ruote::Beanstalk::ParticipantProxy and Receiver
 
 Simply do
 

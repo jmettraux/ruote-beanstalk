@@ -4,6 +4,7 @@
 
 == ruote-beanstalk 2.1.11    not yet released
 
+- BsParticipant -> ParticipantProxy, BsReceiver -> Receiver
 - Ruote::Beanstalk::Storage.close (shutdown in fact)
 
 

@@ -56,7 +56,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
     @engine.register_participant(
       :alpha,
-      Ruote::Beanstalk::BsParticipant,
+      Ruote::Beanstalk::ParticipantProxy,
       'beanstalk' => '127.0.0.1:11300')
 
     watcher = Watcher.new(11300)
@@ -78,7 +78,7 @@ class FtParticipantTest < Test::Unit::TestCase
 
     @engine.register_participant(
       :alpha,
-      Ruote::Beanstalk::BsParticipant,
+      Ruote::Beanstalk::ParticipantProxy,
       'beanstalk' => '127.0.0.1:11300',
       'tube' => 'underground')
 

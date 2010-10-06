@@ -33,7 +33,7 @@ module Beanstalk
   #
   # An error class for error emitted by the "remote side" and received here.
   #
-  class BsReceiveError < RuntimeError
+  class ReceiveError < RuntimeError
 
     attr_reader :fei
 
@@ -44,18 +44,18 @@ module Beanstalk
   end
 
   #
-  # Whereas BsParticipant emits workitems(and cancelitems) to a Beanstalk
+  # Whereas ParticipantProxy emits workitems(and cancelitems) to a Beanstalk
   # queue, the receiver watches a Beanstalk queue/tube.
   #
   # An example initialization :
   #
-  #   Ruote::Beanstalk::BsReceiver.new(
+  #   Ruote::Beanstalk::Receiver.new(
   #     engine, '127.0.0.1:11300', :tube => 'out')
   #
   #
   # == workitem format
   #
-  # BsParticipant and BsReceiver share the same format :3
+  # ParticipantProxy and Receiver share the same format :3
   #
   #   [ 'workitem', workitem_as_a_hash ]
   #     # or
@@ -72,10 +72,10 @@ module Beanstalk
   #
   # Indicates to the receiver which beanstalk tube it should listen to.
   #
-  #   Ruote::Beanstalk::BsReceiver.new(
+  #   Ruote::Beanstalk::Receiver.new(
   #     engine, '127.0.0.1:11300', :tube => 'out')
   #
-  class BsReceiver < Ruote::Receiver
+  class Receiver < ::Ruote::Receiver
 
     # cwes = context, worker, engine or storage
     #
@@ -110,7 +110,7 @@ module Beanstalk
     # Is meant to return a hash with a first element that is either
     # 'workitem', 'error' or 'launchitem'(a type).
     # The second element depends on the type.
-    # It's mappend on Ruote::Beanstalk::BsParticipant anyway.
+    # It's mappend on Ruote::Beanstalk::ParticipantProxy anyway.
     #
     def decode(job)
 
@@ -132,7 +132,7 @@ module Beanstalk
         # data holds a fei(FlowExpressionId) (as a Hash)
 
         @context.error_handler.action_handle(
-          'dispatch', data, BsReceiveError.new(data))
+          'dispatch', data, ReceiveError.new(data))
 
       elsif type == 'launchitem'
 
