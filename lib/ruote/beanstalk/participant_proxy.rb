@@ -109,14 +109,24 @@ module Beanstalk
 
     def consume(workitem)
 
-      connection.put(encode_workitem(workitem))
+      con = new_connection
+
+      con.put(encode_workitem(workitem))
 
       reply(workitem) if @opts['reply_by_default']
+
+    ensure
+      con.close rescue nil
     end
 
     def cancel(fei, flavour)
 
-      connection.put(encode_cancelitem(fei, flavour))
+      con = new_connection
+
+      con.put(encode_cancelitem(fei, flavour))
+
+    ensure
+      con.close rescue nil
     end
 
     def encode_workitem(workitem)
@@ -131,7 +141,7 @@ module Beanstalk
 
     protected
 
-    def connection
+    def new_connection
 
       con = ::Beanstalk::Connection.new(@opts['beanstalk'])
 
