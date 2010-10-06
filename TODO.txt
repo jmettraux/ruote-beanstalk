@@ -16,14 +16,12 @@
 [o] rw : document participant / receiver (use bs as an example)
 [o] storage.close
 [o] ParticipantProxy ?
+[x] operate : better name ?
+[x] what about receiver connections that timed out ? Is it possible ?
 
 [x] base64 encode/decode to allow for non-ascii values
     => add some 漢字 test to ruote/test/unit/storage.rb
     This is a beanstalk-client vs ruby 1.9.x problem
 
-[ ] operate : better name ?
-
 [ ] follow example of latest ruote-amqp (for what ?)
-
-[ ] what about receiver connections that timed out ? Is it possible
 
