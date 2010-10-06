@@ -1,0 +1,15 @@
+
+= ruote-beanstalk CREDITS.txt
+
+== authors
+
+- John Mettraux - http://github.com/jmettraux
+
+
+== contributors
+
+
+== many thanks to
+
+- the beanstalk authors and contributors
+

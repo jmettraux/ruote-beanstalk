@@ -52,17 +52,20 @@ Jeweler::GemcutterTasks.new
 #
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rd|
+
   rd.main = 'README.rdoc'
   rd.rdoc_dir = 'rdoc/ruote-beanstalk_rdoc'
-  rd.rdoc_files.include('README.rdoc', 'CHANGELOG.txt', 'lib/**/*.rb')
   rd.title = "ruote-beanstalk #{Ruote::Beanstalk::VERSION}"
+
+  rd.rdoc_files.include(
+    'README.rdoc', 'CHANGELOG.txt', 'CREDITS.txt', 'lib/**/*.rb')
 end
 
 
 #
 # TO THE WEB
 
-task :upload_website => [ :clean, :rdoc ] do
+task :upload_rdoc => [ :clean, :rdoc ] do
 
   account = 'jmettraux@rubyforge.org'
   webdir = '/var/www/gforge-projects/ruote'
