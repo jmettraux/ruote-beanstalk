@@ -33,7 +33,7 @@ module Beanstalk
   #
   # An error class just for BsStorage.
   #
-  class BsStorageError < RuntimeError
+  class StorageError < RuntimeError
   end
 
   #
@@ -47,7 +47,7 @@ module Beanstalk
   #
   #   engine = Ruote::Engine.new(
   #     Ruote::Worker.new(
-  #       Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)))
+  #       Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)))
   #
   # All the operations(put, get, get_many, ...) of the storage are done
   # by a server, connected to the same beanstalk queue.
@@ -57,7 +57,7 @@ module Beanstalk
   # The storage point to a beanstalk queue and receives orders from clients
   # via the queue.
   #
-  #   Ruote::Beanstalk::BsStorage.new(':11300', 'ruote_work', :fork => true)
+  #   Ruote::Beanstalk::Storage.new(':11300', 'ruote_work', :fork => true)
   #
   # Note the directory passed as a string. When in server mode, this storage
   # uses an embedded Ruote::FsStorage for the actual storage.
@@ -66,7 +66,7 @@ module Beanstalk
   # the Beanstalk server. The storage takes care of stopping the beanstalk
   # server when the Ruby process exits.
   #
-  class BsStorage
+  class Storage
 
     include Ruote::StorageBase
 
@@ -304,7 +304,7 @@ module Beanstalk
 
       if result.is_a?(Array) && result.first == 'error'
         raise ArgumentError.new(result.last) if result[1] == 'ArgumentError'
-        raise BsStorageError.new(result.last)
+        raise StorageError.new(result.last)
       end
 
       result
