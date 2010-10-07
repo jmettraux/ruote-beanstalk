@@ -5,7 +5,7 @@ Beanstalk extensions for [ruote](http://ruote.rubyforge.org) 2.1 (a Ruby workflo
 
 [Beanstalk is a simple, fast workqueue service](http://kr.github.com/beanstalkd/).
 
-ruote-beanstalk provides two things, **first** a ParticipantProxy / Receiver pai, **second** a ruote storage implementation.
+ruote-beanstalk provides two things, **first** a ParticipantProxy / Receiver pair, **second** a ruote storage implementation.
 
 The ParticipantProxy / Receiver pair is about emitting workitems to a Beanstalk queue/tube and listening/receiving them back. Workers can connect to the Beanstalk queue, receive workitems, do some work and then (optionally) send the updated workitem back to the ruote system.
 
@@ -125,14 +125,14 @@ MIT
 ## links
 
 * [http://kr.github.com/beanstalkd/](http://kr.github.com/beanstalkd/)
-
-* [http://ruote.rubyforge.org/)(http://ruote.rubyforge.org/)
+* [http://ruote.rubyforge.org/](http://ruote.rubyforge.org/)
 * [http://github.com/jmettraux/ruote-beanstalk](http://github.com/jmettraux/ruote-beanstalk)
 
 
 ## feedback
 
 mailing list : [http://groups.google.com/group/openwferu-users](http://groups.google.com/group/openwferu-users)
+
 irc : irc.freenode.net #ruote
 
 
