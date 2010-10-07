@@ -1,0 +1,5 @@
+
+This is the rdoc for ruote-beanstalk.
+
+For an overview, see http://github.com/jmettraux/ruote-beanstalk
+

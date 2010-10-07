@@ -53,12 +53,12 @@ Jeweler::GemcutterTasks.new
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rd|
 
-  rd.main = 'README.rdoc'
+  rd.main = 'readme.rdoc'
   rd.rdoc_dir = 'rdoc/ruote-beanstalk_rdoc'
   rd.title = "ruote-beanstalk #{Ruote::Beanstalk::VERSION}"
 
   rd.rdoc_files.include(
-    'README.rdoc', 'CHANGELOG.txt', 'CREDITS.txt', 'lib/**/*.rb')
+    'readme.rdoc', 'CHANGELOG.txt', 'CREDITS.txt', 'lib/**/*.rb')
 end
 
 
