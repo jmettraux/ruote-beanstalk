@@ -2,7 +2,7 @@
 = ruote-beanstalk - CHANGELOG.txt
 
 
-== ruote-beanstalk 2.1.11    not yet released
+== ruote-beanstalk 2.1.11    released 2010/10/13
 
 - BsStorage -> Storage
 - ParticipantProxy closes conn after each despatching

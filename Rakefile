@@ -1,4 +1,6 @@
 
+$:.unshift('.') # ruby 1.9.2
+
 require 'rubygems'
 require 'rake'
 
@@ -33,7 +35,7 @@ Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)
   gem.test_file = 'test/test.rb'
 
   gem.add_dependency 'ruote', ">= #{Ruote::Beanstalk::VERSION}"
-  gem.add_dependency 'rufus-cloche', '>= 0.1.17'
+  gem.add_dependency 'rufus-cloche', '>= 0.1.20'
   gem.add_dependency 'beanstalk-client', '>= 1.1.0'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'rake'
