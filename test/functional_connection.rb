@@ -14,6 +14,6 @@ require 'ruote/beanstalk'
 
 def new_storage (opts)
 
-  Ruote::Beanstalk::BsStorage.new('127.0.0.1:11300', opts)
+  Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)
 end
 

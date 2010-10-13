@@ -7,5 +7,5 @@ FileUtils.rm_rf('ruote_work')
 
 require 'ruote/beanstalk'
 
-Ruote::Beanstalk::BsStorage.new(':11300', 'ruote_work', :fork => true)
+Ruote::Beanstalk::Storage.new(':11300', 'ruote_work', :fork => true)
 
