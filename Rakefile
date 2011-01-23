@@ -1,77 +1,92 @@
 
-$:.unshift('.') # ruby 1.9.2
+$:.unshift('.') # 1.9.2
 
 require 'rubygems'
+
 require 'rake'
-
-require 'lib/ruote/beanstalk/version.rb'
-
-#
-# CLEAN
-
 require 'rake/clean'
-CLEAN.include('pkg', 'tmp', 'html', 'rdoc')
-task :default => [ :clean ]
+require 'rake/rdoctask'
 
 
 #
-# GEM
+# clean
 
-require 'jeweler'
+CLEAN.include('pkg', 'rdoc')
 
-Jeweler::Tasks.new do |gem|
 
-  gem.version = Ruote::Beanstalk::VERSION
-  gem.name = 'ruote-beanstalk'
-  gem.summary = 'Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)'
-  gem.description = %{
-Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)
-  }.strip
-  gem.email = 'jmettraux@gmail.com'
-  gem.homepage = 'http://github.com/jmettraux/ruote-beanstalk'
-  gem.authors = [ 'John Mettraux' ]
-  gem.rubyforge_project = 'ruote'
+#
+# test / spec
 
-  gem.test_file = 'test/test.rb'
+task :test do
 
-  gem.add_dependency 'ruote', ">= #{Ruote::Beanstalk::VERSION}"
-  gem.add_dependency 'rufus-cloche', '>= 0.1.20'
-  gem.add_dependency 'beanstalk-client', '>= 1.1.0'
-  gem.add_development_dependency 'yard'
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'jeweler'
-
-  # gemspec spec : http://www.rubygems.org/read/chapter/20
+  puts
+  puts "to test ruote-beanstalk, head to your ruote/ dir and run"
+  puts
+  puts "  ruby test/test.rb -- --beanstalk"
+  puts
+  puts "but first, make sure your ruote-beanstalk/test/functional_connection.rb"
+  puts "is set correctly."
+  puts
 end
-Jeweler::GemcutterTasks.new
+
+task :default => [ :test ]
 
 
 #
-# DOC
+# gem
 
+GEMSPEC_FILE = Dir['*.gemspec'].first
+GEMSPEC = eval(File.read(GEMSPEC_FILE))
+GEMSPEC.validate
+
+
+desc %{
+  builds the gem and places it in pkg/
+}
+task :build do
+
+  sh "gem build #{GEMSPEC_FILE}"
+  sh "mkdir pkg" rescue nil
+  sh "mv #{GEMSPEC.name}-#{GEMSPEC.version}.gem pkg/"
+end
+
+desc %{
+  builds the gem and pushes it to rubygems.org
+}
+task :push => :build do
+
+  sh "gem push pkg/#{GEMSPEC.name}-#{GEMSPEC.version}.gem"
+end
+
+
+#
+# rdoc
 #
 # make sure to have rdoc 2.5.x to run that
-#
-require 'rake/rdoctask'
+
 Rake::RDocTask.new do |rd|
 
-  rd.main = 'readme.rdoc'
-  rd.rdoc_dir = 'rdoc/ruote-beanstalk_rdoc'
-  rd.title = "ruote-beanstalk #{Ruote::Beanstalk::VERSION}"
+  rd.main = 'README.rdoc'
+  rd.rdoc_dir = 'rdoc'
 
   rd.rdoc_files.include(
-    'readme.rdoc', 'CHANGELOG.txt', 'CREDITS.txt', 'lib/**/*.rb')
+    'README.rdoc', 'CHANGELOG.txt', 'CREDITS.txt', 'lib/**/*.rb')
+
+  rd.title = "#{GEMSPEC.name} #{GEMSPEC.version}"
 end
 
 
 #
-# TO THE WEB
+# upload_rdoc
 
+desc %{
+  upload the rdoc to rubyforge
+}
 task :upload_rdoc => [ :clean, :rdoc ] do
 
   account = 'jmettraux@rubyforge.org'
   webdir = '/var/www/gforge-projects/ruote'
 
-  sh "rsync -azv -e ssh rdoc/ruote-beanstalk_rdoc #{account}:#{webdir}/"
+  sh "rsync -azv -e ssh rdoc/#{GEMSPEC.name}_rdoc #{account}:#{webdir}/"
 end
 
