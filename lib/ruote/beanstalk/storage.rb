@@ -137,7 +137,7 @@ module Beanstalk
 
       return r unless r.nil?
 
-      doc['_rev'] =(doc['_rev'] || -1) + 1 if opts[:update_rev]
+      doc['_rev'] = (doc['_rev'] || -1) + 1 if opts[:update_rev]
 
       nil
     end
