@@ -1,4 +1,6 @@
 
+require 'rubygems'
+
 $:.unshift('../ruote/lib')
 $:.unshift('lib')
 
