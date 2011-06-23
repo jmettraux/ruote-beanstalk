@@ -12,7 +12,7 @@ Rufus::Json.detect_backend
 require 'ruote/beanstalk'
 
 
-def new_storage (opts)
+def new_storage(opts)
 
   Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)
 end

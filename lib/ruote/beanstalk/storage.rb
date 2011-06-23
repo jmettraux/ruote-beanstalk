@@ -108,7 +108,7 @@ module Beanstalk
         sleep 0.1
       end
 
-      put_configuration
+      replace_engine_configuration(@options)
 
       serve if @cloche
     end
@@ -259,17 +259,6 @@ module Beanstalk
       c.ignore('default')
 
       Thread.current[CONN_KEY] = c
-    end
-
-    # Don't put configuration if it's already in
-    #
-    # (avoid storages from trashing configuration...)
-    #
-    def put_configuration
-
-      return if get('configurations', 'engine')
-
-      put({ '_id' => 'engine', 'type' => 'configurations' }.merge(@options))
     end
 
     def operate(command, params)
