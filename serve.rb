@@ -4,6 +4,8 @@ require 'rubygems'
 $:.unshift('../ruote/lib')
 $:.unshift('lib')
 
+require 'yajl'
+
 require 'fileutils'
 FileUtils.rm_rf('ruote_work')
 
