@@ -3,7 +3,11 @@
 Gem::Specification.new do |s|
 
   s.name = 'ruote-beanstalk'
-  s.version = File.read('lib/ruote/beanstalk/version.rb').match(/VERSION = '([^']+)'/)[1]
+
+  s.version = File.read(
+    File.expand_path('../lib/ruote/beanstalk/version.rb', __FILE__)
+  ).match(/ VERSION *= *['"]([^'"]+)/)[1]
+
   s.platform = Gem::Platform::RUBY
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux@gmail.com' ]
