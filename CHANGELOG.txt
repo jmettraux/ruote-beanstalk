@@ -2,7 +2,7 @@
 = ruote-beanstalk - CHANGELOG.txt
 
 
-== ruote-beanstalk 2.2.1    not yet released
+== ruote-beanstalk 2.3.1    not yet released
 
 
 == ruote-beanstalk 2.2.0    released 2011/03/03
