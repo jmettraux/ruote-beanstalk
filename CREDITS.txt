@@ -8,6 +8,8 @@
 
 == contributors
 
+- Don French
+
 
 == many thanks to
 
