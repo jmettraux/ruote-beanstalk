@@ -9,24 +9,7 @@ require File.expand_path('../base', __FILE__)
 
 
 class FtParticipantTest < Test::Unit::TestCase
-
-  def setup
-
-    @bs_pid = Ruote::Beanstalk.fork(
-      :address => '127.0.0.1',
-      :port => 11300,
-      :no_kill_at_exit => true,
-      :quiet => true)
-
-    sleep 0.100
-
-    @engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::HashStorage.new()))
-  end
-
-  def teardown
-
-    Process.kill(9, @bs_pid) if @bs_pid
-  end
+  include BeanstalkTestSetup
 
   class Watcher
 
