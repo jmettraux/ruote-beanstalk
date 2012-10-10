@@ -6,7 +6,7 @@
 # Mon Jun 14 19:43:57 JST 2010
 #
 
-require File.join(File.dirname(__FILE__), 'base')
+require File.expand_path('../base', __FILE__)
 
 
 class FtReceiverTest < Test::Unit::TestCase

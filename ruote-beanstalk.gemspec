@@ -25,7 +25,7 @@ Beanstalk participant/receiver/storage for ruote (a Ruby workflow engine)
     '*.gemspec', '*.txt', '*.rdoc', '*.md'
   ]
 
-  s.add_runtime_dependency 'beanstalk-client', '1.1.0'
+  s.add_runtime_dependency 'beanstalk-client', '>= 1.1.1'
   s.add_runtime_dependency 'ruote', ">= #{s.version.to_s.split('.')[0, 3].join('.')}"
 
   s.add_development_dependency 'rake'
