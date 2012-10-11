@@ -110,7 +110,7 @@ module Beanstalk
     # Is meant to return a hash with a first element that is either
     # 'workitem', 'error' or 'launchitem'(a type).
     # The second element depends on the type.
-    # It's mappend on Ruote::Beanstalk::ParticipantProxy anyway.
+    # It's mapped on Ruote::Beanstalk::ParticipantProxy anyway.
     #
     def decode(job)
 

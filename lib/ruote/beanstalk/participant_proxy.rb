@@ -99,7 +99,6 @@ module Beanstalk
   #     'reply_by_default' => true)
   #
   class ParticipantProxy
-
     include Ruote::LocalParticipant
 
     def initialize(opts)
@@ -107,26 +106,16 @@ module Beanstalk
       @opts = opts
     end
 
-    def consume(workitem)
+    def on_workitem
 
-      con = new_connection
-
-      con.put(encode_workitem(workitem))
+      put(encode_workitem(workitem))
 
       reply(workitem) if @opts['reply_by_default']
-
-    ensure
-      con.close rescue nil
     end
 
-    def cancel(fei, flavour)
+    def on_cancel
 
-      con = new_connection
-
-      con.put(encode_cancelitem(fei, flavour))
-
-    ensure
-      con.close rescue nil
+      put(encode_cancelitem(fei, flavour))
     end
 
     def encode_workitem(workitem)
@@ -141,7 +130,7 @@ module Beanstalk
 
     protected
 
-    def new_connection
+    def put(message)
 
       con = ::Beanstalk::Connection.new(@opts['beanstalk'])
 
@@ -149,7 +138,10 @@ module Beanstalk
         con.use(tube)
       end
 
-      con
+      con.put(message)
+
+    ensure
+      con.close rescue nil
     end
   end
 end
