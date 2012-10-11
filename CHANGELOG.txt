@@ -2,7 +2,9 @@
 = ruote-beanstalk - CHANGELOG.txt
 
 
-== ruote-beanstalk 2.3.1    not yet released
+== ruote-beanstalk 2.3.0    not yet released
+
+- add participant :forget option (same as reply_by_default)
 
 
 == ruote-beanstalk 2.2.0    released 2011/03/03

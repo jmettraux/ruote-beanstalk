@@ -3,6 +3,7 @@ require 'spec_helper'
 
 
 describe Ruote::Beanstalk::Participant do
+  # or Ruote::Beansstalk::ParticipantProxy
 
   before(:each) do
     setup_beanstalk
@@ -75,6 +76,26 @@ describe Ruote::Beanstalk::Participant do
     watcher0.jobs.size.should == 0
     watcher1.jobs.size.should == 1
     watcher1.jobs.first.first.should == 'workitem'
+  end
+
+  it 'replies immediately when forget is set to true' do
+
+    @engine.register_participant(
+      :alpha,
+      Ruote::Beanstalk::Participant,
+      'beanstalk' => '127.0.0.1:11300',
+      'forget' => true)
+
+    watcher = Watcher.new(11300)
+
+    wfid = @engine.launch(Ruote.define do
+      alpha
+    end)
+
+    @engine.wait_for('terminated')
+
+    watcher.jobs.size.should == 1
+    watcher.jobs.first.first.should == 'workitem'
   end
 end
 

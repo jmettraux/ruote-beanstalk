@@ -86,9 +86,9 @@ module Beanstalk
   #     'tube' => 'ruote-workitems')
   #
   #
-  # == :reply_by_default
+  # == :forget (or :reply_by_default)
   #
-  # If the participant is configured with 'reply_by_default' => true, the
+  # If the participant is configured with 'forget' => true, the
   # participant will dispatch the workitem over to Beanstalk and then
   # immediately reply to its ruote engine (letting the flow resume).
   #
@@ -96,7 +96,7 @@ module Beanstalk
   #     'alice'
   #     Ruote::Beanstalk::ParticipantProxy,
   #     'beanstalk' => '127.0.0.1:11300',
-  #     'reply_by_default' => true)
+  #     'forget' => true)
   #
   class ParticipantProxy
     include Ruote::LocalParticipant
@@ -110,7 +110,7 @@ module Beanstalk
 
       put(encode_workitem(workitem))
 
-      reply(workitem) if @opts['reply_by_default']
+      reply if @opts['reply_by_default'] || @opts['forget']
     end
 
     def on_cancel
