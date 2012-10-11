@@ -1,20 +1,7 @@
 
-ruote_beanstalk_lib = File.expand_path(
-  File.join(File.dirname(__FILE__), %w[ .. .. lib ]))
+module RuoteBeanstalkHelper
 
-$:.unshift(ruote_beanstalk_lib)
-
-require 'test/unit'
-
-require 'yajl'
-
-require 'ruote'
-require 'ruote/beanstalk'
-
-
-module BeanstalkTestSetup
-
-  def setup
+  def setup_beanstalk
 
     port = 11300
 
@@ -38,13 +25,17 @@ module BeanstalkTestSetup
 
       sleep 0.100
     end
-
-    @engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::HashStorage.new()))
   end
 
-  def teardown
+  def teardown_beanstalk
 
     Process.kill(9, @bs_pid) if @bs_pid
+  end
+
+  def setup_ruote
+
+    @engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::HashStorage.new()))
+    @engine.noisy = ENV['NOISY'] == 'true'
   end
 end
 

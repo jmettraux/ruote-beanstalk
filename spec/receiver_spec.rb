@@ -1,16 +1,16 @@
-# encoding: UTF-8
 
-#
-# testing ruote-beanstalk
-#
-# Mon Jun 14 19:43:57 JST 2010
-#
-
-require File.expand_path('../base', __FILE__)
+require 'spec_helper'
 
 
-class FtReceiverTest < Test::Unit::TestCase
-  include BeanstalkTestSetup
+describe Ruote::Beanstalk::Receiver do
+
+  before(:each) do
+    setup_beanstalk
+    setup_ruote
+  end
+  after(:each) do
+    teardown_beanstalk
+  end
 
   class HelloServer
 
@@ -38,7 +38,7 @@ class FtReceiverTest < Test::Unit::TestCase
     end
   end
 
-  def test_participant_and_receiver
+  it 'receives workitem coming back from a participant' do
 
     @engine.register_participant(
       :alpha,
@@ -51,18 +51,16 @@ class FtReceiverTest < Test::Unit::TestCase
 
     echo = HelloServer.new(11300, 'in', 'out')
 
-    #@engine.context.logger.noisy = true
-
     wfid = @engine.launch(Ruote.define do
       alpha
     end)
 
     r = @engine.wait_for(wfid)
 
-    assert_equal 'world', r['workitem']['fields']['hello']
+    r['workitem']['fields']['hello'].should == 'world'
   end
 
-  def test_launchitem
+  it 'accepts launchitems' do
 
     sp = @engine.register_participant '.+', Ruote::StorageParticipant
 
@@ -86,10 +84,10 @@ class FtReceiverTest < Test::Unit::TestCase
 
     sleep 1
 
-    assert_equal 1, sp.size
-    assert_equal 'alpha', sp.first.participant_name
-    #assert_equal '上海', sp.first.fields['hello']
-    assert_equal 'shangai', sp.first.fields['hello']
+    sp.size.should == 1
+    sp.first.participant_name.should == 'alpha'
+    #sp.first.fields['hello'].should == '上海'
+    sp.first.fields['hello'].should == 'shangai'
   end
 end
 

@@ -1,15 +1,16 @@
 
-#
-# testing ruote-beanstalk
-#
-# Mon Jun 14 16:11:02 JST 2010
-#
-
-require File.expand_path('../base', __FILE__)
+require 'spec_helper'
 
 
-class FtParticipantTest < Test::Unit::TestCase
-  include BeanstalkTestSetup
+describe Ruote::Beanstalk::Participant do
+
+  before(:each) do
+    setup_beanstalk
+    setup_ruote
+  end
+  after(:each) do
+    teardown_beanstalk
+  end
 
   class Watcher
 
@@ -35,7 +36,7 @@ class FtParticipantTest < Test::Unit::TestCase
     end
   end
 
-  def test_participant
+  it 'transmits workitems over beanstalk' do
 
     @engine.register_participant(
       :alpha,
@@ -44,20 +45,17 @@ class FtParticipantTest < Test::Unit::TestCase
 
     watcher = Watcher.new(11300)
 
-    #@engine.context.logger.noisy = true
-
     wfid = @engine.launch(Ruote.define do
       alpha
     end)
 
-    @engine.wait_for(:alpha)
-    sleep 0.100
+    @engine.wait_for('dispatched')
 
-    assert_equal 1, watcher.jobs.size
-    assert_equal 'workitem', watcher.jobs.first.first
+    watcher.jobs.size.should == 1
+    watcher.jobs.first.first.should == 'workitem'
   end
 
-  def test_participant_tube
+  it 'accepts a tube name when registered' do
 
     @engine.register_participant(
       :alpha,
@@ -68,18 +66,15 @@ class FtParticipantTest < Test::Unit::TestCase
     watcher0 = Watcher.new(11300)
     watcher1 = Watcher.new(11300, 'underground')
 
-    #@engine.context.logger.noisy = true
-
     wfid = @engine.launch(Ruote.define do
       alpha
     end)
 
-    @engine.wait_for(:alpha)
-    sleep 0.100
+    @engine.wait_for('dispatched')
 
-    assert_equal 0, watcher0.jobs.size
-    assert_equal 1, watcher1.jobs.size
-    assert_equal 'workitem', watcher1.jobs.first.first
+    watcher0.jobs.size.should == 0
+    watcher1.jobs.size.should == 1
+    watcher1.jobs.first.first.should == 'workitem'
   end
 end
 
