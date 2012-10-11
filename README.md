@@ -1,9 +1,9 @@
 
 # ruote-beanstalk
 
-Beanstalk extensions for [ruote](http://ruote.rubyforge.org) 2.1 (a Ruby workflow engine).
+Beanstalk extensions for [ruote](http://ruote.rubyforge.org) (a Ruby workflow engine).
 
-[Beanstalk is a simple, fast workqueue service](http://kr.github.com/beanstalkd/).
+[Beanstalk is a simple, fast, workqueue service](http://kr.github.com/beanstalkd/).
 
 ruote-beanstalk provides two things, **first** a ParticipantProxy / Receiver pair, **second** a ruote storage implementation.
 
@@ -24,22 +24,26 @@ rdoc : [http://ruote.rubyforge.org/ruote-beanstalk_rdoc/](http://ruote.rubyforge
 
 Registering a Beanstalk participant :
 
-    @engine.register_participant(
-      'alpha',
-      Ruote::Beanstalk::ParticipantProxy,
-      'beanstalk' => '127.0.0.1:11300',
-      'tube' => 'ruote-workitems')
+```ruby
+  @engine.register_participant(
+    'alpha',
+    Ruote::Beanstalk::ParticipantProxy,
+    'beanstalk' => '127.0.0.1:11300',
+    'tube' => 'ruote-workitems')
+```
 
 
 Binding a listener to a storage or an engine :
 
-    Ruote::Beanstalk::Receiver.new(
-      engine, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
+```ruby
+  Ruote::Beanstalk::Receiver.new(
+    engine, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
 
-        # or
+      # or
 
-    Ruote::Beanstalk::Receiver.new(
-      storage, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
+  Ruote::Beanstalk::Receiver.new(
+    storage, '127.0.0.1:11300', 'tube' => 'ruote-incoming')
+```
 
 The receiver manages a thread that listens to incoming messages and feeds them to ruote via the engine or directly via a storage.
 
@@ -62,21 +66,27 @@ Beanstalk is the intermediary.
 
 Pass a string of the form host:port and a hash of options :
 
-    Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)
+```ruby
+  Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)
+```
 
 Wrapped in an engine + worker :
 
-    engine = Ruote::Engine.new(
-      Ruote::Worker.new(
-        Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)))
+```ruby
+  engine = Ruote::Engine.new(
+    Ruote::Worker.new(
+      Ruote::Beanstalk::Storage.new('127.0.0.1:11300', opts)))
+```
 
 #### server
 
 This piece of ruby starts a Beanstalk instance (:fork => true) and starts a BsStorage 'server' coupled to an embedded FsStorage :
 
-    require 'ruote/beanstalk'
+```ruby
+  require 'ruote/beanstalk'
 
-    Ruote::Beanstalk::Storage.new(':11300', 'ruote_work', :fork => true)
+  Ruote::Beanstalk::Storage.new(':11300', 'ruote_work', :fork => true)
+```
 
 
 ## running tests
@@ -85,7 +95,9 @@ This piece of ruby starts a Beanstalk instance (:fork => true) and starts a BsSt
 
 Simply do
 
-    ruby test/test.rb
+```
+  ruby test/test.rb
+```
 
 in your ruote-beanstalk/ directory.
 
@@ -94,12 +106,16 @@ in your ruote-beanstalk/ directory.
 
 assuming you have
 
-    ruote/
-    ruote-beanstalk/
+```
+  ruote/
+  ruote-beanstalk/
+```
 
 In a separate terminal, go to ruote-beanstalk/ and launch
 
-    ruby serve.rb
+```
+  ruby serve.rb
+```
 
 To launch a beanstalkd + fs storage couple, then run unit or functional tests
 
@@ -108,13 +124,17 @@ To launch a beanstalkd + fs storage couple, then run unit or functional tests
 
 get into ruote/ and do
 
-    ruby test/unit/storage.rb -- --beanstalk
+```
+  ruby test/unit/storage.rb -- --beanstalk
+```
 
 * functional tests :
 
 get into ruote/ and do
 
-    ruby test/functional/test.rb -- --beanstalk
+```
+  ruby test/functional/test.rb -- --beanstalk
+```
 
 
 ## license
@@ -124,16 +144,15 @@ MIT
 
 ## links
 
-* [http://kr.github.com/beanstalkd/](http://kr.github.com/beanstalkd/)
-* [http://ruote.rubyforge.org/](http://ruote.rubyforge.org/)
-* [http://github.com/jmettraux/ruote-beanstalk](http://github.com/jmettraux/ruote-beanstalk)
+* <http://kr.github.com/beanstalkd/>
+* <http://ruote.rubyforge.org/>
+* <http://github.com/jmettraux/ruote-beanstalk>
 
 
 ## feedback
 
-mailing list : [http://groups.google.com/group/openwferu-users](http://groups.google.com/group/openwferu-users)
-
-irc : irc.freenode.net #ruote
+* mailing list : <http://groups.google.com/group/openwferu-users>
+* irc : irc.freenode.net #ruote
 
 
 ## many thanks to
