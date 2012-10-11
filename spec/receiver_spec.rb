@@ -43,13 +43,13 @@ describe Ruote::Beanstalk::Receiver do
     @engine.register_participant(
       :alpha,
       Ruote::Beanstalk::ParticipantProxy,
-      'beanstalk' => '127.0.0.1:11300',
+      'beanstalk' => "127.0.0.1:#{BS_PORT}",
       'tube' => 'in')
 
     Ruote::Beanstalk::Receiver.new(
-      @engine, '127.0.0.1:11300', :tube => 'out')
+      @engine, "127.0.0.1:#{BS_PORT}", :tube => 'out')
 
-    echo = HelloServer.new(11300, 'in', 'out')
+    echo = HelloServer.new(BS_PORT, 'in', 'out')
 
     wfid = @engine.launch(Ruote.define do
       alpha
@@ -65,9 +65,7 @@ describe Ruote::Beanstalk::Receiver do
     sp = @engine.register_participant '.+', Ruote::StorageParticipant
 
     Ruote::Beanstalk::Receiver.new(
-      @engine, '127.0.0.1:11300', :tube => 'launch')
-
-    #@engine.context.logger.noisy = true
+      @engine, "127.0.0.1:#{BS_PORT}", :tube => 'launch')
 
     pdef = Ruote.process_definition do
       alpha
@@ -78,7 +76,7 @@ describe Ruote::Beanstalk::Receiver do
 
     launchitem = [ 'launchitem', [ pdef, fields, {} ] ]
 
-    con = ::Beanstalk::Connection.new('127.0.0.1:11300')
+    con = ::Beanstalk::Connection.new("127.0.0.1:#{BS_PORT}")
     con.use('launch')
     con.put(Rufus::Json.encode(launchitem))
 

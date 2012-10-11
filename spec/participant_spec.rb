@@ -30,8 +30,9 @@ describe Ruote::Beanstalk::Participant do
             job.delete
             @jobs << Rufus::Json.decode(job.body)
           end
-        rescue Exception => e
+        rescue EOFError => e
           #p e
+          # just exit when the the beanstalk dies
         end
       end
     end
@@ -42,9 +43,9 @@ describe Ruote::Beanstalk::Participant do
     @engine.register_participant(
       :alpha,
       Ruote::Beanstalk::ParticipantProxy,
-      'beanstalk' => '127.0.0.1:11300')
+      'beanstalk' => "127.0.0.1:#{BS_PORT}")
 
-    watcher = Watcher.new(11300)
+    watcher = Watcher.new(BS_PORT)
 
     wfid = @engine.launch(Ruote.define do
       alpha
@@ -61,11 +62,11 @@ describe Ruote::Beanstalk::Participant do
     @engine.register_participant(
       :alpha,
       Ruote::Beanstalk::ParticipantProxy,
-      'beanstalk' => '127.0.0.1:11300',
+      'beanstalk' => "127.0.0.1:#{BS_PORT}",
       'tube' => 'underground')
 
-    watcher0 = Watcher.new(11300)
-    watcher1 = Watcher.new(11300, 'underground')
+    watcher0 = Watcher.new(BS_PORT)
+    watcher1 = Watcher.new(BS_PORT, 'underground')
 
     wfid = @engine.launch(Ruote.define do
       alpha
@@ -83,10 +84,10 @@ describe Ruote::Beanstalk::Participant do
     @engine.register_participant(
       :alpha,
       Ruote::Beanstalk::Participant,
-      'beanstalk' => '127.0.0.1:11300',
+      'beanstalk' => "127.0.0.1:#{BS_PORT}",
       'forget' => true)
 
-    watcher = Watcher.new(11300)
+    watcher = Watcher.new(BS_PORT)
 
     wfid = @engine.launch(Ruote.define do
       alpha

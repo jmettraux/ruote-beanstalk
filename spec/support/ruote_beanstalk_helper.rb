@@ -1,30 +1,19 @@
 
+
+BS_PORT = (ENV['BS_PORT'] || 11307).to_i
+
+
 module RuoteBeanstalkHelper
 
   def setup_beanstalk
 
-    port = 11300
+    @bs_pid = Ruote::Beanstalk.fork(
+      :address => '127.0.0.1',
+      :port => BS_PORT,
+      :no_kill_at_exit => true,
+      :quiet => true)
 
-    found = false
-    socket = nil
-    begin
-      socket = TCPSocket.new('127.0.0.1', port)
-      found = true
-    rescue
-    ensure
-      socket.close if socket
-    end
-
-    unless found
-
-      @bs_pid = Ruote::Beanstalk.fork(
-        :address => '127.0.0.1',
-        :port => port,
-        :no_kill_at_exit => true,
-        :quiet => true)
-
-      sleep 0.100
-    end
+    sleep 0.100
   end
 
   def teardown_beanstalk
